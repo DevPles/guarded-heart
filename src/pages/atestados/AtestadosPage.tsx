@@ -16,7 +16,7 @@ import { Plus, FileWarning } from 'lucide-react';
 const AtestadosPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [empresaFilter, setEmpresaFilter] = useState('');
+  const [empresaFilter, setEmpresaFilter] = useState('all');
   const [showNew, setShowNew] = useState(false);
 
   const [form, setForm] = useState({
@@ -46,7 +46,7 @@ const AtestadosPage = () => {
     queryKey: ['atestados', empresaFilter],
     queryFn: async () => {
       let q = supabase.from('atestados').select('*, colaboradores:colaborador_id(nome_completo), empresas:empresa_id(razao_social)').order('data_inicio', { ascending: false });
-      if (empresaFilter) q = q.eq('empresa_id', empresaFilter);
+      if (empresaFilter !== 'all') q = q.eq('empresa_id', empresaFilter);
       const { data } = await q.limit(100);
       return (data ?? []) as any[];
     },
@@ -81,7 +81,7 @@ const AtestadosPage = () => {
         <Select value={empresaFilter} onValueChange={setEmpresaFilter}>
           <SelectTrigger className="w-60"><SelectValue placeholder="Filtrar empresa..." /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
             {empresas.map((e: any) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
           </SelectContent>
         </Select>

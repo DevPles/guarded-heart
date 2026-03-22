@@ -27,7 +27,7 @@ const TIPO_DOC_OPTIONS = [
 const DocumentosPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [empresaFilter, setEmpresaFilter] = useState('');
+  const [empresaFilter, setEmpresaFilter] = useState('all');
   const [showNew, setShowNew] = useState(false);
 
   const [form, setForm] = useState({
@@ -46,7 +46,7 @@ const DocumentosPage = () => {
     queryKey: ['documents', empresaFilter],
     queryFn: async () => {
       let q = supabase.from('documents').select('*, empresas:empresa_id(razao_social)').order('proximo_vencimento', { ascending: true });
-      if (empresaFilter) q = q.eq('empresa_id', empresaFilter);
+      if (empresaFilter !== 'all') q = q.eq('empresa_id', empresaFilter);
       const { data } = await q.limit(200);
       return (data ?? []) as any[];
     },
@@ -97,7 +97,7 @@ const DocumentosPage = () => {
         <Select value={empresaFilter} onValueChange={setEmpresaFilter}>
           <SelectTrigger className="w-60"><SelectValue placeholder="Filtrar empresa..." /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
             {empresas.map((e: any) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
           </SelectContent>
         </Select>
