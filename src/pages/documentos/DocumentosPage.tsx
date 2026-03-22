@@ -125,8 +125,8 @@ const DocumentosPage = () => {
 
       <Tabs defaultValue="documentos">
         <TabsList>
-          <TabsTrigger value="documentos"><FileText className="h-4 w-4 mr-1" /> Documentos</TabsTrigger>
-          <TabsTrigger value="assinaturas"><PenTool className="h-4 w-4 mr-1" /> Assinaturas</TabsTrigger>
+          <TabsTrigger value="documentos">Documentos</TabsTrigger>
+          <TabsTrigger value="assinaturas">Assinaturas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="documentos" className="space-y-4">
