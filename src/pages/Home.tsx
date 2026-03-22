@@ -149,7 +149,6 @@ const Home = () => {
             className="card-liquid cursor-pointer group h-full flex flex-col"
             onClick={() => navigate(card.path)}
           >
-          >
             <CardContent className="p-6 flex flex-col flex-1">
               <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: 'Space Grotesk' }}>
                 {card.title}
