@@ -44,7 +44,7 @@ const NotificacoesPage = () => {
 
       <div className="flex gap-3 mb-4">
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-40"><Filter className="h-4 w-4 mr-2" /><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectTrigger className="w-40"><SelectValue placeholder="Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="pending">Pendentes</SelectItem>

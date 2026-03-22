@@ -217,7 +217,7 @@ const PCMSOPage = () => {
             <Dialog open={showNewEvento} onOpenChange={setShowNewEvento}>
               <DialogTrigger asChild>
                 <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Plus className="h-4 w-4 mr-1" /> Novo Exame
+                  Novo Exame
                 </Button>
               </DialogTrigger>
               <DialogContent>
