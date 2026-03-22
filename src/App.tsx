@@ -7,6 +7,7 @@ import { AuthProvider, useAuth, AppRole } from "@/contexts/AuthContext";
 
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import LandingPage from "./pages/LandingPage";
 import AppLayout from "./components/AppLayout";
 import EmpresaDetail from "./pages/empresas/EmpresaDetail";
 import CadastrosPage from "./pages/cadastros/CadastrosPage";
