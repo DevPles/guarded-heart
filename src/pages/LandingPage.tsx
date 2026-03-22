@@ -580,6 +580,7 @@ const LandingPage = () => {
             <a href="#problema" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Problema</a>
             <a href="#solucao" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Solução</a>
             <a href="#planos" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Planos</a>
+            <a href="#quem-somos" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Quem Somos</a>
             <a href="#contato" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Contato</a>
           </div>
           <div className="flex items-center gap-3">
