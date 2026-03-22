@@ -2,6 +2,7 @@ import { useAuth, AppRole } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import logoIcon from '@/assets/logo-ergon-icon.png';
+import NotificationBell from '@/components/NotificationBell';
 
 const ROLE_LABELS: Record<AppRole, string> = {
   admin_master: 'Admin Master',
@@ -38,6 +39,7 @@ const TopNav = () => {
           </Button>
 
           <div className="flex items-center gap-4">
+            <NotificationBell />
             <div className="text-right hidden sm:block">
               <p className="text-sm font-medium text-foreground">{profile?.full_name || user?.email}</p>
               <p className="text-xs text-muted-foreground">{roleLabel}</p>

@@ -27,6 +27,7 @@ import ColaboradorPortal from "./pages/colaborador/ColaboradorPortal";
 import ConsultorDashboard from "./pages/consultor/ConsultorDashboard";
 import EmpresaAdminDashboard from "./pages/empresa/EmpresaAdminDashboard";
 import EmpresaGestorDashboard from "./pages/empresa/EmpresaGestorDashboard";
+import NotificacoesPage from "./pages/notificacoes/NotificacoesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -97,6 +98,7 @@ const App = () => (
               <Route path="/planos-acao/:id" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><PlanoAcaoForm /></RoleGuard>} />
               <Route path="/laudos" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><LaudosList /></RoleGuard>} />
               <Route path="/dashboard" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><DashboardPage /></RoleGuard>} />
+              <Route path="/notificacoes" element={<NotificacoesPage />} />
               <Route path="/configuracoes" element={<RoleGuard allowed={['admin_master']}><ConfiguracoesPage /></RoleGuard>} />
             </Route>
             <Route path="*" element={<NotFound />} />
