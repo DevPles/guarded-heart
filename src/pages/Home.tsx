@@ -134,16 +134,10 @@ const Home = () => {
   );
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] -m-6 p-6 bg-gradient-to-br from-[hsl(215,60%,22%)] to-[hsl(200,70%,42%)] relative overflow-hidden">
-      {/* Decorative circles */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-white/5" />
-      <div className="absolute -bottom-40 -right-32 w-[500px] h-[500px] rounded-full bg-white/5" />
-      <div className="absolute top-1/3 right-16 w-48 h-48 rounded-full bg-white/5" />
-
-      <div className="relative z-10">
+    <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white">Painel Principal</h1>
-        <p className="text-white/70 mt-1">
+        <h1 className="text-3xl font-bold text-foreground">Painel Principal</h1>
+        <p className="text-muted-foreground mt-1">
           {primaryRole ? ROLE_LABELS[primaryRole] : 'Selecione um módulo para começar'}
         </p>
       </div>
@@ -152,7 +146,7 @@ const Home = () => {
         {visibleCards.map((card) => (
           <Card
             key={card.path}
-            className="card-liquid cursor-pointer group h-full flex flex-col"
+            className="cursor-pointer transition-all hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5 group h-full flex flex-col"
             onClick={() => navigate(card.path)}
           >
             <CardContent className="p-6 flex flex-col flex-1">
@@ -162,7 +156,7 @@ const Home = () => {
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed flex-1">
                 {card.description}
               </p>
-              <div className="mt-4 pt-4 border-t border-white/20">
+              <div className="mt-4 pt-4 border-t">
                 {card.countQuery && counts ? (
                   <>
                     <span className="text-2xl font-bold text-foreground">
@@ -177,7 +171,6 @@ const Home = () => {
             </CardContent>
           </Card>
         ))}
-      </div>
       </div>
     </div>
   );
