@@ -96,8 +96,10 @@ const protectionBenefits = [
   'Redução de passivos trabalhistas com evidência contínua',
   'Conformidade total com NR-1, NR-7 e NR-17',
   'Rastreabilidade completa para auditorias e perícias',
-  'Laudos técnicos com validade jurídica para defesa em processos trabalhistas, assinados pelo próprio colaborador e com todos os dados do sistema',
 ];
+
+/** Benefício exclusivo — só aparece quando serviços premium estão selecionados */
+const premiumBenefit = 'Laudos com validade jurídica assinados pelo colaborador — a prova que seu advogado precisa para vencer processos trabalhistas';
 
 const contractOptions = [
   { months: 6, discount: 0, label: 'Semestral', tag: '' },
