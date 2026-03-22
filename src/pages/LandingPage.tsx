@@ -914,10 +914,10 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     ← Voltar
                   </button>
                 ) : <div />}
-                {step < 3 && (
+                {step < 4 && (
                   <button
                     onClick={() => setStep(s => s + 1)}
-                    disabled={selected.size === 0}
+                    disabled={step === 1 ? !canAdvanceStep1 : step === 2 ? selected.size === 0 : false}
                     className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Continuar <ChevronRight className="w-4 h-4" />
