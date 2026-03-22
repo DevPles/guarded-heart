@@ -320,7 +320,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                           <button
                             key={opt.months}
                             onClick={() => setSelectedContract(opt.months)}
-                            className={`w-full p-5 rounded-2xl border-2 text-left transition-all duration-200 relative ${
+                            className={`w-full p-5 pl-14 rounded-2xl border-2 text-left transition-all duration-200 relative ${
                               isActive
                                 ? 'border-teal-400 bg-teal-50/30'
                                 : 'border-gray-100 bg-white hover:border-gray-200'
@@ -333,6 +333,12 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                                 {opt.tag}
                               </span>
                             )}
+                            {/* Radio */}
+                            <div className={`absolute top-5 left-5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                              isActive ? 'border-teal-500' : 'border-gray-300'
+                            }`}>
+                              {isActive && <div className="w-2.5 h-2.5 rounded-full bg-teal-500" />}
+                            </div>
                             <div className="flex items-center justify-between">
                               <div>
                                 <p className="text-base font-bold text-gray-900">{opt.label}</p>
@@ -353,12 +359,6 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                             <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
                               <span>Total do contrato: R$ {total.toLocaleString('pt-BR')}</span>
                               <span>R$ {perEmployee.toFixed(2).replace('.', ',')} por colaborador/mês</span>
-                            </div>
-                            {/* Radio */}
-                            <div className={`absolute top-5 left-5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                              isActive ? 'border-teal-500' : 'border-gray-300'
-                            }`}>
-                              {isActive && <div className="w-2.5 h-2.5 rounded-full bg-teal-500" />}
                             </div>
                           </button>
                         );
