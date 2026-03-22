@@ -17,7 +17,7 @@ import { Plus, FileText, Calendar, Activity } from 'lucide-react';
 const PCMSOPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [empresaFilter, setEmpresaFilter] = useState('');
+  const [empresaFilter, setEmpresaFilter] = useState('all');
   const [showNewPrograma, setShowNewPrograma] = useState(false);
   const [showNewEvento, setShowNewEvento] = useState(false);
 
