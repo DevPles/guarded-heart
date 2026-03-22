@@ -156,7 +156,7 @@ const Home = () => {
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed flex-1">
                 {card.description}
               </p>
-              <div className="mt-4 pt-4 border-t">
+              <div className="mt-4 pt-4 border-t border-white/20">
                 {card.countQuery && counts ? (
                   <>
                     <span className="text-2xl font-bold text-foreground">
