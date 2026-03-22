@@ -52,8 +52,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-1">
           <CardContent className="p-5 space-y-4">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
+            <div>
               <h3 className="font-semibold text-sm">Índice de Conformidade</h3>
             </div>
             <div className="flex items-center gap-4">
