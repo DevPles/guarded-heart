@@ -65,18 +65,24 @@ interface ServiceOption {
   description: string;
   basePrice: number;
   category: 'essential' | 'advanced' | 'premium';
+  /** Custo médio de processos/multas SEM o serviço */
+  avgLawsuitCost: number;
+  /** % de redução de risco com o serviço */
+  riskReduction: number;
+  /** Texto explicativo do risco */
+  riskContext: string;
 }
 
 const services: ServiceOption[] = [
-  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', basePrice: 800, category: 'essential' },
-  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', basePrice: 1500, category: 'essential' },
-  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', basePrice: 1200, category: 'essential' },
-  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', basePrice: 2000, category: 'advanced' },
-  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', basePrice: 900, category: 'advanced' },
-  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', basePrice: 600, category: 'advanced' },
-  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', basePrice: 1100, category: 'premium' },
-  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', basePrice: 1800, category: 'premium' },
-  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', basePrice: 1500, category: 'premium' },
+  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', basePrice: 800, category: 'essential', avgLawsuitCost: 85000, riskReduction: 0.60, riskContext: 'Processos por LER/DORT e doenças ocupacionais custam em média R$ 85 mil por caso.' },
+  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', basePrice: 1500, category: 'essential', avgLawsuitCost: 120000, riskReduction: 0.75, riskContext: 'Perícias trabalhistas sem laudo técnico geram condenações médias de R$ 120 mil.' },
+  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', basePrice: 1200, category: 'essential', avgLawsuitCost: 45000, riskReduction: 0.70, riskContext: 'Multas do MTE por PCMSO irregular variam de R$ 15 mil a R$ 45 mil por infração.' },
+  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', basePrice: 2000, category: 'advanced', avgLawsuitCost: 200000, riskReduction: 0.65, riskContext: 'Ações por assédio moral e burnout geram indenizações médias de R$ 200 mil.' },
+  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', basePrice: 900, category: 'advanced', avgLawsuitCost: 30000, riskReduction: 0.50, riskContext: 'Empresas sem indicadores perdem em média R$ 30 mil/ano com decisões reativas.' },
+  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', basePrice: 600, category: 'advanced', avgLawsuitCost: 25000, riskReduction: 0.55, riskContext: 'Exames e documentos vencidos geram multas médias de R$ 25 mil por ocorrência.' },
+  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', basePrice: 1100, category: 'premium', avgLawsuitCost: 60000, riskReduction: 0.70, riskContext: 'Sem plano de ação documentado, multas por reincidência chegam a R$ 60 mil.' },
+  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', basePrice: 1800, category: 'premium', avgLawsuitCost: 150000, riskReduction: 0.60, riskContext: 'Gestão descentralizada expõe cada filial a processos independentes de até R$ 150 mil.' },
+  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', basePrice: 1500, category: 'premium', avgLawsuitCost: 40000, riskReduction: 0.45, riskContext: 'Erros operacionais por falta de treinamento geram custos médios de R$ 40 mil.' },
 ];
 
 const categoryLabels: Record<string, { label: string; color: string }> = {
