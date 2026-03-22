@@ -27,7 +27,7 @@ import ColaboradorPortal from "./pages/colaborador/ColaboradorPortal";
 import ConsultorDashboard from "./pages/consultor/ConsultorDashboard";
 import EmpresaAdminDashboard from "./pages/empresa/EmpresaAdminDashboard";
 import EmpresaGestorDashboard from "./pages/empresa/EmpresaGestorDashboard";
-import NotificacoesPage from "./pages/notificacoes/NotificacoesPage";
+
 import PCMSOPage from "./pages/pcmso/PCMSOPage";
 import AtestadosPage from "./pages/atestados/AtestadosPage";
 import DocumentosPage from "./pages/documentos/DocumentosPage";
