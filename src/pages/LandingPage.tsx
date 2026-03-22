@@ -604,11 +604,6 @@ const LandingPage = () => {
 
         <motion.div style={{ opacity: heroOpacity }} className="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-20 w-full">
           <div className="max-w-2xl">
-            <ScrollText direction="left" delay={0.1}>
-              <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest bg-teal-50 text-teal-700 border border-teal-200 mb-6">
-                Saúde Ocupacional com Evidências
-              </span>
-            </ScrollText>
 
             <ScrollText direction="up" delay={0.3}>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-gray-900 mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
