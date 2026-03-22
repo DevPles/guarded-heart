@@ -430,23 +430,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
               </button>
             </div>
 
-            {/* Steps indicator */}
-            <div className="px-8 py-3 flex items-center gap-2 border-b border-gray-50">
-              {[1, 2, 3, 4].map(s => (
-                <div key={s} className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    step > s
-                      ? 'bg-teal-500 text-white'
-                      : step === s
-                        ? 'bg-gray-900 text-white'
-                        : 'bg-gray-100 text-gray-400'
-                  }`}>
-                    {step > s ? <Check className="w-4 h-4" /> : s}
-                  </div>
-                  {s < 4 && <div className={`w-8 h-0.5 rounded-full transition-all duration-300 ${step > s ? 'bg-teal-400' : 'bg-gray-200'}`} />}
-                </div>
-              ))}
-            </div>
+
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-8 py-6">
