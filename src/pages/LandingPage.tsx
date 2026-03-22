@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { X, Check, ChevronRight } from 'lucide-react';
+import { X, Check, ChevronRight, Search, Building2, AlertTriangle } from 'lucide-react';
 import logoErgon from '@/assets/logo-ergon.png';
 import heroImg1 from '@/assets/landing-hero-1.jpg';
 import heroImg2 from '@/assets/landing-hero-2.jpg';
@@ -108,6 +108,109 @@ const contractOptions = [
   { months: 24, discount: 0.20, label: 'Bienal', tag: 'Melhor custo-benefício' },
 ];
 
+/* ── Industry-specific risk data ── */
+interface IndustryProfile {
+  label: string;
+  riskMultiplier: number;
+  topRisks: string[];
+  avgCondemnation: number;
+  fiscalizationRate: string;
+  commonNRs: string[];
+  insight: string;
+}
+
+const industryProfiles: Record<string, IndustryProfile> = {
+  industria: {
+    label: 'Indústria / Manufatura',
+    riskMultiplier: 1.4,
+    topRisks: ['LER/DORT por movimentos repetitivos', 'Exposição a ruído e agentes químicos', 'Acidentes com máquinas e equipamentos'],
+    avgCondemnation: 95000,
+    fiscalizationRate: '32% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-12', 'NR-15', 'NR-17', 'NR-1'],
+    insight: 'Indústrias representam o maior volume de condenações trabalhistas por doenças ocupacionais no Brasil.',
+  },
+  comercio: {
+    label: 'Comércio / Varejo',
+    riskMultiplier: 1.0,
+    topRisks: ['Sobrecarga postural em caixas e estoques', 'Jornadas extensas e banco de horas irregular', 'Assédio moral e metas abusivas'],
+    avgCondemnation: 45000,
+    fiscalizationRate: '18% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7'],
+    insight: 'O varejo lidera em ações por assédio moral e jornada irregular, com crescimento de 22% em 2024.',
+  },
+  saude: {
+    label: 'Saúde / Hospitalar',
+    riskMultiplier: 1.5,
+    topRisks: ['Exposição a agentes biológicos', 'Sobrecarga ergonômica em enfermagem', 'Burnout e riscos psicossociais'],
+    avgCondemnation: 120000,
+    fiscalizationRate: '15% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-32', 'NR-17', 'NR-7', 'NR-1'],
+    insight: 'Profissionais de saúde têm 3x mais afastamentos por transtornos mentais que a média nacional.',
+  },
+  construcao: {
+    label: 'Construção Civil',
+    riskMultiplier: 1.6,
+    topRisks: ['Quedas de altura e soterramento', 'Exposição solar e esforço físico extremo', 'Falta de EPI e treinamento'],
+    avgCondemnation: 150000,
+    fiscalizationRate: '25% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-18', 'NR-35', 'NR-6', 'NR-1'],
+    insight: 'Construção civil é o setor com maior taxa de mortalidade no trabalho e condenações mais altas.',
+  },
+  tecnologia: {
+    label: 'Tecnologia / Escritórios',
+    riskMultiplier: 0.9,
+    topRisks: ['LER/DORT por uso prolongado de computador', 'Burnout e sobrecarga mental', 'Problemas posturais e sedentarismo'],
+    avgCondemnation: 55000,
+    fiscalizationRate: '8% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7'],
+    insight: 'Ações por burnout em tech cresceram 40% desde 2022. A NR-1 agora exige gestão de riscos psicossociais.',
+  },
+  logistica: {
+    label: 'Logística / Transporte',
+    riskMultiplier: 1.3,
+    topRisks: ['Lombalgia por carga e descarga manual', 'Acidentes de trânsito e jornada excessiva', 'Vibração e exposição a ruído'],
+    avgCondemnation: 85000,
+    fiscalizationRate: '12% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-11', 'NR-17', 'NR-1', 'NR-7'],
+    insight: 'Motoristas e operadores de empilhadeira são os cargos com mais afastamentos por problemas na coluna.',
+  },
+  alimentacao: {
+    label: 'Alimentação / Restaurantes',
+    riskMultiplier: 1.1,
+    topRisks: ['Queimaduras e cortes', 'Jornada excessiva e banco de horas', 'Posturas inadequadas e calor excessivo'],
+    avgCondemnation: 35000,
+    fiscalizationRate: '10% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7', 'NR-24'],
+    insight: 'Restaurantes têm alta rotatividade e pouca documentação, facilitando condenações em fiscalizações.',
+  },
+  educacao: {
+    label: 'Educação',
+    riskMultiplier: 0.8,
+    topRisks: ['Disfonia e problemas vocais', 'Burnout e sobrecarga emocional', 'Problemas posturais'],
+    avgCondemnation: 40000,
+    fiscalizationRate: '5% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7'],
+    insight: 'Professores são a segunda categoria com mais afastamentos por transtornos mentais no Brasil.',
+  },
+  outros: {
+    label: 'Outros',
+    riskMultiplier: 1.0,
+    topRisks: ['Riscos ergonômicos gerais', 'Falta de documentação SST', 'Riscos psicossociais não mapeados'],
+    avgCondemnation: 60000,
+    fiscalizationRate: 'Variável por segmento',
+    commonNRs: ['NR-1', 'NR-7', 'NR-17'],
+    insight: 'Toda empresa com CLT é obrigada a cumprir as NRs. A fiscalização tem aumentado em todos os setores.',
+  },
+};
+
+const companyTypes = [
+  { value: 'mei', label: 'MEI' },
+  { value: 'me', label: 'ME (Microempresa)' },
+  { value: 'epp', label: 'EPP (Empresa de Pequeno Porte)' },
+  { value: 'medio', label: 'Médio Porte' },
+  { value: 'grande', label: 'Grande Porte' },
+];
+
 /* ── Data ── */
 const painPoints = [
   { title: 'Risco invisível', text: 'Riscos ergonômicos e psicossociais que ninguém documenta. Até virar processo.' },
@@ -133,6 +236,37 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [contactForm, setContactForm] = useState({ nome: '', empresa: '', email: '', telefone: '' });
   const [submitted, setSubmitted] = useState(false);
 
+  // Step 1 — Company identification
+  const [cnpj, setCnpj] = useState('');
+  const [companyType, setCompanyType] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [cnpjSearched, setCnpjSearched] = useState(false);
+  const [cnpjLoading, setCnpjLoading] = useState(false);
+
+  const industryProfile = industryProfiles[industry] || null;
+
+  const formatCnpj = (value: string) => {
+    const nums = value.replace(/\D/g, '').slice(0, 14);
+    return nums.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+      .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4')
+      .replace(/^(\d{2})(\d{3})(\d{3})/, '$1.$2.$3')
+      .replace(/^(\d{2})(\d{3})/, '$1.$2')
+      .replace(/^(\d{2})/, '$1');
+  };
+
+  const handleCnpjSearch = async () => {
+    const nums = cnpj.replace(/\D/g, '');
+    if (nums.length !== 14) return;
+    setCnpjLoading(true);
+    // Simulate CNPJ lookup (in production, use ReceitaWS or similar)
+    await new Promise(r => setTimeout(r, 1200));
+    // Mock result based on CNPJ
+    setCompanyName('Empresa identificada via CNPJ');
+    setCnpjSearched(true);
+    setCnpjLoading(false);
+  };
+
   const toggle = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev);
@@ -150,8 +284,9 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const totalContract = monthlyWithDiscount * contractOption.months;
   const savings = contractOption.discount > 0 ? (monthlyWithMarkup - monthlyWithDiscount) * contractOption.months : 0;
 
-  // Cálculos de impacto — risco total e economia potencial
-  const totalRiskExposure = selectedServices.reduce((sum, s) => sum + s.avgLawsuitCost, 0);
+  // Cálculos de impacto — com multiplicador do setor
+  const riskMult = industryProfile?.riskMultiplier || 1.0;
+  const totalRiskExposure = selectedServices.reduce((sum, s) => sum + Math.round(s.avgLawsuitCost * riskMult), 0);
   const avgReduction = selectedServices.length > 0
     ? selectedServices.reduce((sum, s) => sum + s.riskReduction, 0) / selectedServices.length
     : 0;
@@ -169,8 +304,15 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     setContactForm({ nome: '', empresa: '', email: '', telefone: '' });
     setColaboradores(50);
     setSelectedContract(12);
+    setCnpj('');
+    setCompanyType('');
+    setIndustry('');
+    setCompanyName('');
+    setCnpjSearched(false);
     onClose();
   };
+
+  const canAdvanceStep1 = industry !== '' && companyType !== '';
 
   const inputClasses = "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all bg-white";
 
@@ -202,14 +344,16 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100">
               <div>
                 <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {step === 1 && 'Monte seu plano de proteção'}
-                  {step === 2 && 'Escolha o período de contratação'}
-                  {step === 3 && 'Finalizar contratação'}
+                  {step === 1 && 'Identifique sua empresa'}
+                  {step === 2 && 'Monte seu plano de proteção'}
+                  {step === 3 && 'Escolha o período de contratação'}
+                  {step === 4 && 'Finalizar contratação'}
                 </h2>
                 <p className="text-sm text-gray-400 mt-0.5">
-                  {step === 1 && 'Selecione os serviços que sua empresa precisa'}
-                  {step === 2 && 'Quanto maior o período, menor o investimento mensal'}
-                  {step === 3 && 'Preencha seus dados para receber a proposta formal'}
+                  {step === 1 && 'Vamos analisar os riscos específicos do seu segmento'}
+                  {step === 2 && (industryProfile ? `Serviços recomendados para ${industryProfile.label}` : 'Selecione os serviços que sua empresa precisa')}
+                  {step === 3 && 'Quanto maior o período, menor o investimento mensal'}
+                  {step === 4 && 'Preencha seus dados para receber a proposta formal'}
                 </p>
               </div>
               <button onClick={reset} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
@@ -219,7 +363,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
             {/* Steps indicator */}
             <div className="px-8 py-3 flex items-center gap-2 border-b border-gray-50">
-              {[1, 2, 3].map(s => (
+              {[1, 2, 3, 4].map(s => (
                 <div key={s} className="flex items-center gap-2">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
                     step > s
@@ -230,7 +374,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   }`}>
                     {step > s ? <Check className="w-4 h-4" /> : s}
                   </div>
-                  {s < 3 && <div className={`w-12 h-0.5 rounded-full transition-all duration-300 ${step > s ? 'bg-teal-400' : 'bg-gray-200'}`} />}
+                  {s < 4 && <div className={`w-8 h-0.5 rounded-full transition-all duration-300 ${step > s ? 'bg-teal-400' : 'bg-gray-200'}`} />}
                 </div>
               ))}
             </div>
@@ -238,7 +382,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-8 py-6">
               <AnimatePresence mode="wait">
-                {/* STEP 1 — Select services */}
+                {/* STEP 1 — Company identification */}
                 {step === 1 && (
                   <motion.div
                     key="step1"
@@ -247,6 +391,159 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     exit={{ opacity: 0, x: -30 }}
                     transition={{ duration: 0.3 }}
                   >
+                    {/* CNPJ */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">CNPJ (opcional)</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={cnpj}
+                          onChange={e => { setCnpj(formatCnpj(e.target.value)); setCnpjSearched(false); }}
+                          className={inputClasses}
+                          placeholder="00.000.000/0000-00"
+                        />
+                        <button
+                          onClick={handleCnpjSearch}
+                          disabled={cnpj.replace(/\D/g, '').length !== 14 || cnpjLoading}
+                          className="px-4 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-40 shrink-0 flex items-center gap-2"
+                        >
+                          {cnpjLoading ? (
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <Search className="w-4 h-4" />
+                          )}
+                          Buscar
+                        </button>
+                      </div>
+                      {cnpjSearched && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-2 p-3 rounded-xl bg-teal-50 border border-teal-200 flex items-center gap-2"
+                        >
+                          <Building2 className="w-4 h-4 text-teal-600 shrink-0" />
+                          <p className="text-sm text-teal-800 font-medium">{companyName}</p>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Company type */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Porte da empresa *</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {companyTypes.map(ct => (
+                          <button
+                            key={ct.value}
+                            onClick={() => setCompanyType(ct.value)}
+                            className={`p-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
+                              companyType === ct.value
+                                ? 'border-teal-400 bg-teal-50 text-gray-900'
+                                : 'border-gray-100 text-gray-500 hover:border-gray-200'
+                            }`}
+                          >
+                            {ct.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Industry */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Ramo de atuação *</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(industryProfiles).map(([key, prof]) => (
+                          <button
+                            key={key}
+                            onClick={() => setIndustry(key)}
+                            className={`p-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
+                              industry === key
+                                ? 'border-teal-400 bg-teal-50 text-gray-900'
+                                : 'border-gray-100 text-gray-500 hover:border-gray-200'
+                            }`}
+                          >
+                            {prof.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Industry risk preview */}
+                    <AnimatePresence>
+                      {industryProfile && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="p-5 rounded-2xl bg-gray-900 text-white"
+                        >
+                          <div className="flex items-center gap-2 mb-3">
+                            <AlertTriangle className="w-5 h-5 text-amber-400" />
+                            <p className="text-sm font-bold text-amber-400 uppercase tracking-wider">
+                              Análise de risco: {industryProfile.label}
+                            </p>
+                          </div>
+                          <p className="text-sm text-gray-300 mb-4">{industryProfile.insight}</p>
+                          
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Condenação média no setor</p>
+                              <p className="text-xl font-bold text-red-400" style={{ fontFamily: "'Space Grotesk'" }}>
+                                R$ {industryProfile.avgCondemnation.toLocaleString('pt-BR')}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Taxa de fiscalização</p>
+                              <p className="text-sm font-bold text-gray-200 mt-1">{industryProfile.fiscalizationRate}</p>
+                            </div>
+                          </div>
+
+                          <div className="mb-3">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Principais riscos do setor</p>
+                            <ul className="space-y-1">
+                              {industryProfile.topRisks.map(r => (
+                                <li key={r} className="flex items-start gap-2 text-sm text-gray-300">
+                                  <span className="text-red-400 mt-0.5">●</span> {r}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="pt-3 border-t border-gray-700">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">NRs aplicáveis</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {industryProfile.commonNRs.map(nr => (
+                                <span key={nr} className="px-2 py-0.5 rounded-full bg-gray-700 text-xs text-gray-300 font-medium">{nr}</span>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )}
+
+                {/* STEP 2 — Select services */}
+                {step === 2 && (
+                  <motion.div
+                    key="step2"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {/* Industry context banner */}
+                    {industryProfile && (
+                      <div className="mb-5 p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-amber-900">
+                            Empresas de {industryProfile.label} têm condenação média de R$ {industryProfile.avgCondemnation.toLocaleString('pt-BR')}
+                          </p>
+                          <p className="text-xs text-amber-700 mt-0.5">Selecione os serviços para reduzir sua exposição jurídica</p>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="mb-8 p-5 rounded-2xl bg-gray-50 border border-gray-100">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-medium text-gray-600">Nº de colaboradores</span>
@@ -306,11 +603,13 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                                         className="overflow-hidden"
                                       >
                                         <div className="mt-3 pt-3 border-t border-teal-200/50">
-                                          <p className="text-xs text-gray-500 mb-2">{service.riskContext}</p>
+                                          <p className="text-xs text-gray-500 mb-2">
+                                            {industryProfile ? `No setor de ${industryProfile.label}: ` : ''}{service.riskContext}
+                                          </p>
                                           <div className="flex items-center gap-4">
                                             <div className="flex-1">
-                                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Custo médio sem proteção</p>
-                                              <p className="text-sm font-bold text-red-500">R$ {service.avgLawsuitCost.toLocaleString('pt-BR')}</p>
+                                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Custo médio{industryProfile ? ' no seu setor' : ''}</p>
+                                              <p className="text-sm font-bold text-red-500">R$ {Math.round(service.avgLawsuitCost * riskMult).toLocaleString('pt-BR')}</p>
                                             </div>
                                             <div className="flex-1">
                                               <p className="text-[10px] text-gray-400 uppercase tracking-wider">Redução com Ergon</p>
@@ -363,10 +662,10 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </motion.div>
                 )}
 
-                {/* STEP 2 — Contract duration + pricing */}
-                {step === 2 && (
+                {/* STEP 3 — Contract duration + pricing */}
+                {step === 3 && (
                   <motion.div
-                    key="step2"
+                    key="step3"
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -30 }}
@@ -485,10 +784,10 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </motion.div>
                 )}
 
-                {/* STEP 3 — Contact form + final summary */}
-                {step === 3 && (
+                {/* STEP 4 — Contact form + final summary */}
+                {step === 4 && (
                   <motion.div
-                    key="step3"
+                    key="step4"
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -30 }}
@@ -615,10 +914,10 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     ← Voltar
                   </button>
                 ) : <div />}
-                {step < 3 && (
+                {step < 4 && (
                   <button
                     onClick={() => setStep(s => s + 1)}
-                    disabled={selected.size === 0}
+                    disabled={step === 1 ? !canAdvanceStep1 : step === 2 ? selected.size === 0 : false}
                     className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Continuar <ChevronRight className="w-4 h-4" />
