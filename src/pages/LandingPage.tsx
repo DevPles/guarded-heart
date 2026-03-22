@@ -738,7 +738,6 @@ const LandingPage = () => {
               onClick={() => setQuoteOpen(true)}
               className="inline-flex items-center gap-3 px-10 py-5 rounded-full text-lg font-bold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-500 shadow-2xl shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-105"
             >
-              <BarChart3 className="w-6 h-6" />
               Montar meu plano de proteção
             </button>
           </ScrollText>
