@@ -662,10 +662,10 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </motion.div>
                 )}
 
-                {/* STEP 2 — Contract duration + pricing */}
-                {step === 2 && (
+                {/* STEP 3 — Contract duration + pricing */}
+                {step === 3 && (
                   <motion.div
-                    key="step2"
+                    key="step3"
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -30 }}
