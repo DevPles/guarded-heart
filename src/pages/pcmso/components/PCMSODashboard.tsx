@@ -116,8 +116,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
       {vencidos.length > 0 && (
         <Card className="border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle className="h-4 w-4 text-red-600" />
+            <div className="mb-3">
               <h3 className="font-semibold text-sm text-red-700 dark:text-red-400">Exames Vencidos — Ação Imediata</h3>
             </div>
             <div className="space-y-2">
