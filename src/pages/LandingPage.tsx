@@ -746,7 +746,7 @@ const LandingPage = () => {
             <div className="flex flex-wrap justify-center gap-6 mt-16">
               {['NR-1 Compliant', 'NR-7 Integrado', 'NR-17 Documentado', 'Dados Criptografados'].map(badge => (
                 <div key={badge} className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-100">
-                  <Shield className="w-4 h-4 text-teal-500" />
+                  <span className="w-2 h-2 rounded-full bg-teal-500" />
                   <span className="text-xs font-medium text-gray-600">{badge}</span>
                 </div>
               ))}
