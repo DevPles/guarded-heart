@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, FileText, PenTool } from 'lucide-react';
+
 
 const TIPO_DOC_OPTIONS = [
   { value: 'AEP', label: 'AEP' },
