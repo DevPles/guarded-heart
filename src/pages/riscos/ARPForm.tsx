@@ -278,6 +278,9 @@ const ARPForm = () => {
         <Button variant="outline" onClick={() => navigate('/riscos-psicossociais')}>Cancelar</Button>
         <Button variant="secondary" onClick={() => handleSave(false)} disabled={saving}>Salvar Rascunho</Button>
         <Button onClick={() => handleSave(true)} disabled={saving}>Finalizar ARP</Button>
+        <Button variant="outline" onClick={handleGeneratePdf} className="ml-auto">
+          <FileDown className="h-4 w-4 mr-2" /> Gerar Laudo PDF
+        </Button>
       </div>
     </div>
   );
