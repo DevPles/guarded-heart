@@ -76,11 +76,11 @@ const LaudosList = () => {
       };
 
       if (assessment.type === 'aep') {
-        await generateAepPdf(baseData as any, { brandLogoBase64: brandLogo || undefined });
+        await generateAepPdf(baseData as any);
       } else if (assessment.type === 'aet') {
-        await generateAetPdf({ ...baseData, sections: items } as any, { brandLogoBase64: brandLogo || undefined });
+        await generateAetPdf({ ...baseData, sections: items } as any);
       } else if (assessment.type === 'arp') {
-        await generateArpPdf(baseData as any, { brandLogoBase64: brandLogo || undefined });
+        await generateArpPdf(baseData as any);
       }
 
       toast({ title: 'PDF gerado com sucesso' });
