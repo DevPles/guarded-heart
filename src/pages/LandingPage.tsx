@@ -430,9 +430,8 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                                 )}
                               </div>
                             </div>
-                            <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                            <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400">
                               <span>Total do contrato: R$ {total.toLocaleString('pt-BR')}</span>
-                              <span>R$ {perEmployee.toFixed(2).replace('.', ',')} por colaborador/mês</span>
                             </div>
                           </button>
                         );
