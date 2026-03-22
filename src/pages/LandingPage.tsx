@@ -145,8 +145,14 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const monthlyWithMarkup = Math.ceil(baseTotal * MARKUP);
   const monthlyWithDiscount = Math.ceil(monthlyWithMarkup * (1 - contractOption.discount));
   const totalContract = monthlyWithDiscount * contractOption.months;
-  const perEmployee = colaboradores > 0 ? monthlyWithDiscount / colaboradores : 0;
   const savings = contractOption.discount > 0 ? (monthlyWithMarkup - monthlyWithDiscount) * contractOption.months : 0;
+
+  // Cálculos de impacto — risco total e economia potencial
+  const totalRiskExposure = selectedServices.reduce((sum, s) => sum + s.avgLawsuitCost, 0);
+  const avgReduction = selectedServices.length > 0
+    ? selectedServices.reduce((sum, s) => sum + s.riskReduction, 0) / selectedServices.length
+    : 0;
+  const potentialSavings = Math.round(totalRiskExposure * avgReduction);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
