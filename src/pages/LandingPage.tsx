@@ -63,21 +63,20 @@ interface ServiceOption {
   id: string;
   label: string;
   description: string;
-  icon: React.ReactNode;
   basePrice: number;
   category: 'essential' | 'advanced' | 'premium';
 }
 
 const services: ServiceOption[] = [
-  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', icon: <ClipboardList className="w-5 h-5" />, basePrice: 800, category: 'essential' },
-  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', icon: <FileCheck className="w-5 h-5" />, basePrice: 1500, category: 'essential' },
-  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', icon: <HeartPulse className="w-5 h-5" />, basePrice: 1200, category: 'essential' },
-  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', icon: <Brain className="w-5 h-5" />, basePrice: 2000, category: 'advanced' },
-  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', icon: <BarChart3 className="w-5 h-5" />, basePrice: 900, category: 'advanced' },
-  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', icon: <Bell className="w-5 h-5" />, basePrice: 600, category: 'advanced' },
-  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', icon: <Shield className="w-5 h-5" />, basePrice: 1100, category: 'premium' },
-  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', icon: <Building2 className="w-5 h-5" />, basePrice: 1800, category: 'premium' },
-  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', icon: <Users className="w-5 h-5" />, basePrice: 1500, category: 'premium' },
+  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', basePrice: 800, category: 'essential' },
+  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', basePrice: 1500, category: 'essential' },
+  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', basePrice: 1200, category: 'essential' },
+  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', basePrice: 2000, category: 'advanced' },
+  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', basePrice: 900, category: 'advanced' },
+  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', basePrice: 600, category: 'advanced' },
+  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', basePrice: 1100, category: 'premium' },
+  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', basePrice: 1800, category: 'premium' },
+  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', basePrice: 1500, category: 'premium' },
 ];
 
 const categoryLabels: Record<string, { label: string; color: string }> = {
@@ -91,6 +90,12 @@ const protectionBenefits = [
   'Redução de passivos trabalhistas com evidência contínua',
   'Conformidade total com NR-1, NR-7 e NR-17',
   'Rastreabilidade completa para auditorias e perícias',
+];
+
+const contractOptions = [
+  { months: 6, discount: 0, label: 'Semestral', tag: '' },
+  { months: 12, discount: 0.10, label: 'Anual', tag: 'Mais escolhido' },
+  { months: 24, discount: 0.20, label: 'Bienal', tag: 'Melhor custo-benefício' },
 ];
 
 /* ── Data ── */
@@ -114,6 +119,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [step, setStep] = useState(1);
   const [colaboradores, setColaboradores] = useState(50);
   const [selected, setSelected] = useState<Set<string>>(new Set(['aep', 'pcmso']));
+  const [selectedContract, setSelectedContract] = useState(12);
   const [contactForm, setContactForm] = useState({ nome: '', empresa: '', email: '', telefone: '' });
   const [submitted, setSubmitted] = useState(false);
 
@@ -128,8 +134,12 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
   const selectedServices = services.filter(s => selected.has(s.id));
   const baseTotal = selectedServices.reduce((sum, s) => sum + s.basePrice, 0);
-  const perEmployee = colaboradores > 0 ? (baseTotal * MARKUP) / colaboradores : 0;
-  const displayTotal = Math.ceil(baseTotal * MARKUP);
+  const contractOption = contractOptions.find(c => c.months === selectedContract) || contractOptions[1];
+  const monthlyWithMarkup = Math.ceil(baseTotal * MARKUP);
+  const monthlyWithDiscount = Math.ceil(monthlyWithMarkup * (1 - contractOption.discount));
+  const totalContract = monthlyWithDiscount * contractOption.months;
+  const perEmployee = colaboradores > 0 ? monthlyWithDiscount / colaboradores : 0;
+  const savings = contractOption.discount > 0 ? (monthlyWithMarkup - monthlyWithDiscount) * contractOption.months : 0;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,8 +152,11 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     setSelected(new Set(['aep', 'pcmso']));
     setContactForm({ nome: '', empresa: '', email: '', telefone: '' });
     setColaboradores(50);
+    setSelectedContract(12);
     onClose();
   };
+
+  const inputClasses = "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all bg-white";
 
   return (
     <AnimatePresence>
@@ -170,17 +183,17 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100 bg-gradient-to-r from-teal-50 to-blue-50">
+            <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100">
               <div>
                 <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   {step === 1 && 'Monte seu plano de proteção'}
-                  {step === 2 && 'Resumo do seu orçamento'}
-                  {step === 3 && 'Solicitar proposta'}
+                  {step === 2 && 'Escolha o período de contratação'}
+                  {step === 3 && 'Finalizar contratação'}
                 </h2>
-                <p className="text-sm text-gray-500 mt-0.5">
+                <p className="text-sm text-gray-400 mt-0.5">
                   {step === 1 && 'Selecione os serviços que sua empresa precisa'}
-                  {step === 2 && 'Revise os serviços e vantagens inclusos'}
-                  {step === 3 && 'Preencha seus dados para receber a proposta'}
+                  {step === 2 && 'Quanto maior o período, menor o investimento mensal'}
+                  {step === 3 && 'Preencha seus dados para receber a proposta formal'}
                 </p>
               </div>
               <button onClick={reset} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
@@ -189,13 +202,15 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
 
             {/* Steps indicator */}
-            <div className="px-8 py-3 flex items-center gap-2 bg-gray-50/50">
+            <div className="px-8 py-3 flex items-center gap-2 border-b border-gray-50">
               {[1, 2, 3].map(s => (
                 <div key={s} className="flex items-center gap-2">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    step >= s
-                      ? 'bg-gradient-to-br from-teal-500 to-blue-600 text-white shadow-md shadow-teal-500/20'
-                      : 'bg-gray-200 text-gray-400'
+                    step > s
+                      ? 'bg-teal-500 text-white'
+                      : step === s
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-gray-100 text-gray-400'
                   }`}>
                     {step > s ? <Check className="w-4 h-4" /> : s}
                   </div>
@@ -207,6 +222,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-8 py-6">
               <AnimatePresence mode="wait">
+                {/* STEP 1 — Select services */}
                 {step === 1 && (
                   <motion.div
                     key="step1"
@@ -217,8 +233,8 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   >
                     <div className="mb-8 p-5 rounded-2xl bg-gray-50 border border-gray-100">
                       <div className="flex items-center justify-between mb-3">
-                        <span className="text-sm font-medium text-gray-700">Nº de colaboradores</span>
-                        <span className="text-2xl font-bold text-teal-600" style={{ fontFamily: "'Space Grotesk'" }}>
+                        <span className="text-sm font-medium text-gray-600">Nº de colaboradores</span>
+                        <span className="text-2xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
                           {colaboradores}
                         </span>
                       </div>
@@ -244,24 +260,19 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                               <button
                                 key={service.id}
                                 onClick={() => toggle(service.id)}
-                                className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                                className={`w-full flex items-center justify-between gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
                                   isSelected
-                                    ? 'border-teal-400 bg-teal-50/50 shadow-sm'
-                                    : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50/50'
+                                    ? 'border-teal-400 bg-teal-50/50'
+                                    : 'border-gray-100 bg-white hover:border-gray-200'
                                 }`}
                               >
-                                <div className={`mt-0.5 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                                  isSelected ? 'bg-teal-500 text-white' : 'bg-gray-100 text-gray-400'
-                                }`}>
-                                  {service.icon}
-                                </div>
                                 <div className="flex-1 min-w-0">
-                                  <p className={`text-sm font-semibold ${isSelected ? 'text-teal-800' : 'text-gray-700'}`}>
+                                  <p className={`text-sm font-semibold ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>
                                     {service.label}
                                   </p>
                                   <p className="text-xs text-gray-400 mt-0.5">{service.description}</p>
                                 </div>
-                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 transition-all ${
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                                   isSelected ? 'border-teal-500 bg-teal-500' : 'border-gray-300'
                                 }`}>
                                   {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
@@ -275,6 +286,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </motion.div>
                 )}
 
+                {/* STEP 2 — Contract duration + pricing */}
                 {step === 2 && (
                   <motion.div
                     key="step2"
@@ -283,62 +295,105 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     exit={{ opacity: 0, x: -30 }}
                     transition={{ duration: 0.3 }}
                   >
+                    {/* Resumo serviços */}
                     <div className="mb-6">
-                      <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Serviços inclusos</h3>
-                      <div className="space-y-3">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                        {selectedServices.length} serviços selecionados · {colaboradores} colaboradores
+                      </p>
+                      <div className="flex flex-wrap gap-2">
                         {selectedServices.map(s => (
-                          <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-teal-50/50 border border-teal-100">
-                            <div className="w-9 h-9 rounded-lg bg-teal-500 text-white flex items-center justify-center shrink-0">
-                              {s.icon}
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-sm font-semibold text-gray-800">{s.label}</p>
-                              <p className="text-xs text-gray-400">{s.description}</p>
-                            </div>
-                          </div>
+                          <span key={s.id} className="px-3 py-1.5 rounded-full bg-gray-100 text-xs font-medium text-gray-700">
+                            {s.label}
+                          </span>
                         ))}
                       </div>
                     </div>
 
-                    <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-blue-50 border border-teal-100">
-                      <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <Shield className="w-4 h-4 text-teal-600" />
+                    {/* Contract options */}
+                    <p className="text-sm font-semibold text-gray-900 mb-4">Escolha o período de contratação</p>
+                    <div className="space-y-3 mb-8">
+                      {contractOptions.map(opt => {
+                        const monthly = Math.ceil(monthlyWithMarkup * (1 - opt.discount));
+                        const total = monthly * opt.months;
+                        const isActive = selectedContract === opt.months;
+                        return (
+                          <button
+                            key={opt.months}
+                            onClick={() => setSelectedContract(opt.months)}
+                            className={`w-full p-5 rounded-2xl border-2 text-left transition-all duration-200 relative ${
+                              isActive
+                                ? 'border-teal-400 bg-teal-50/30'
+                                : 'border-gray-100 bg-white hover:border-gray-200'
+                            }`}
+                          >
+                            {opt.tag && (
+                              <span className={`absolute -top-2.5 right-4 px-3 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                                opt.months === 24 ? 'bg-teal-500 text-white' : 'bg-gray-900 text-white'
+                              }`}>
+                                {opt.tag}
+                              </span>
+                            )}
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="text-base font-bold text-gray-900">{opt.label}</p>
+                                <p className="text-xs text-gray-400 mt-0.5">{opt.months} meses de contrato</p>
+                              </div>
+                              <div className="text-right">
+                                <p className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
+                                  R$ {monthly.toLocaleString('pt-BR')}
+                                  <span className="text-xs font-normal text-gray-400">/mês</span>
+                                </p>
+                                {opt.discount > 0 && (
+                                  <p className="text-xs text-teal-600 font-semibold mt-0.5">
+                                    Economia de R$ {((monthlyWithMarkup - monthly) * opt.months).toLocaleString('pt-BR')} no período
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                              <span>Total do contrato: R$ {total.toLocaleString('pt-BR')}</span>
+                              <span>R$ {perEmployee.toFixed(2).replace('.', ',')} por colaborador/mês</span>
+                            </div>
+                            {/* Radio */}
+                            <div className={`absolute top-5 left-5 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                              isActive ? 'border-teal-500' : 'border-gray-300'
+                            }`}>
+                              {isActive && <div className="w-2.5 h-2.5 rounded-full bg-teal-500" />}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Benefits */}
+                    <div className="p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                      <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">
                         Sua empresa terá
-                      </h3>
-                      <ul className="space-y-2.5">
+                      </p>
+                      <ul className="space-y-2">
                         {protectionBenefits.map(b => (
-                          <li key={b} className="flex items-start gap-3 text-sm text-gray-700">
-                            <Check className="w-4 h-4 text-teal-500 mt-0.5 shrink-0" />
+                          <li key={b} className="flex items-start gap-2 text-sm text-gray-600">
+                            <span className="text-teal-500 font-bold mt-px">✓</span>
                             {b}
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="p-5 rounded-2xl bg-gray-900 text-white">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-white/60">{colaboradores} colaboradores</span>
-                        <span className="text-sm text-white/60">{selectedServices.length} serviços</span>
+                    {contractOption.months >= 12 && (
+                      <div className="mt-4 p-4 rounded-xl bg-teal-50 border border-teal-100">
+                        <p className="text-sm text-teal-800 font-medium">
+                          {contractOption.months === 24
+                            ? 'Contrato bienal garante o menor custo mensal e proteção contínua com atualizações incluídas durante todo o período.'
+                            : 'Contrato anual oferece estabilidade de preço e suporte prioritário durante toda a vigência.'
+                          }
+                        </p>
                       </div>
-                      <div className="flex items-end justify-between">
-                        <div>
-                          <p className="text-xs text-white/40 uppercase tracking-wider">Investimento mensal estimado</p>
-                          <p className="text-3xl font-bold mt-1" style={{ fontFamily: "'Space Grotesk'" }}>
-                            R$ {displayTotal.toLocaleString('pt-BR')}
-                            <span className="text-sm font-normal text-white/50">/mês</span>
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs text-white/40">Por colaborador</p>
-                          <p className="text-lg font-semibold text-teal-400" style={{ fontFamily: "'Space Grotesk'" }}>
-                            R$ {perEmployee.toFixed(2).replace('.', ',')}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                    )}
                   </motion.div>
                 )}
 
+                {/* STEP 3 — Contact form + final summary */}
                 {step === 3 && (
                   <motion.div
                     key="step3"
@@ -348,71 +403,111 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     transition={{ duration: 0.3 }}
                   >
                     {submitted ? (
-                      <div className="text-center py-16">
+                      <div className="py-12">
                         <motion.div
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                          className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-teal-500/30"
+                          className="w-16 h-16 rounded-full bg-teal-500 flex items-center justify-center mx-auto mb-6"
                         >
-                          <Check className="w-10 h-10 text-white" />
+                          <Check className="w-8 h-8 text-white" />
                         </motion.div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Space Grotesk'" }}>
-                          Proposta solicitada!
-                        </h3>
-                        <p className="text-gray-500 mb-8">
-                          Nossa equipe entrará em contato em até 24h com sua proposta personalizada.
-                        </p>
-                        <button onClick={reset} className="px-8 py-3 rounded-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold hover:from-teal-400 hover:to-blue-500 transition-all shadow-lg">
+                        <div className="text-center mb-8">
+                          <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Space Grotesk'" }}>
+                            Proposta enviada com sucesso
+                          </h3>
+                          <p className="text-gray-400 text-sm">
+                            Nossa equipe entrará em contato em até 24h com o contrato formal.
+                          </p>
+                        </div>
+
+                        {/* Resumo final */}
+                        <div className="p-6 rounded-2xl bg-gray-50 border border-gray-100 mb-6">
+                          <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+                            <div>
+                              <p className="text-xs text-gray-400 uppercase tracking-wider">Plano contratado</p>
+                              <p className="text-lg font-bold text-gray-900">{contractOption.label} — {contractOption.months} meses</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-xs text-gray-400">Investimento mensal</p>
+                              <p className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
+                                R$ {monthlyWithDiscount.toLocaleString('pt-BR')}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-3 gap-4 text-center">
+                            <div>
+                              <p className="text-xs text-gray-400">Serviços</p>
+                              <p className="text-lg font-bold text-gray-900">{selectedServices.length}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Colaboradores</p>
+                              <p className="text-lg font-bold text-gray-900">{colaboradores}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-400">Total do contrato</p>
+                              <p className="text-lg font-bold text-gray-900">R$ {totalContract.toLocaleString('pt-BR')}</p>
+                            </div>
+                          </div>
+                          {savings > 0 && (
+                            <div className="mt-4 pt-3 border-t border-gray-200 text-center">
+                              <p className="text-sm text-teal-600 font-semibold">
+                                Você economiza R$ {savings.toLocaleString('pt-BR')} com o plano {contractOption.label.toLowerCase()}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        <button onClick={reset} className="w-full py-4 rounded-full bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-all">
                           Fechar
                         </button>
                       </div>
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-5">
-                        <p className="text-sm text-gray-500 mb-4">
-                          Preencha seus dados e receba uma proposta personalizada com os {selectedServices.length} serviços selecionados para {colaboradores} colaboradores.
-                        </p>
+                        <div className="p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-between mb-2">
+                          <div>
+                            <p className="text-xs text-gray-400 uppercase tracking-wider">Investimento</p>
+                            <p className="text-lg font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
+                              R$ {monthlyWithDiscount.toLocaleString('pt-BR')}/mês
+                            </p>
+                          </div>
+                          <div className="text-right text-xs text-gray-400">
+                            <p>{selectedServices.length} serviços · {colaboradores} colaboradores</p>
+                            <p>{contractOption.label} ({contractOption.months} meses)</p>
+                          </div>
+                        </div>
+
                         <div className="grid sm:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1.5">Seu nome *</label>
                             <input type="text" required value={contactForm.nome} onChange={e => setContactForm(f => ({ ...f, nome: e.target.value }))}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="João Silva" />
+                              className={inputClasses} placeholder="João Silva" />
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1.5">Empresa *</label>
                             <input type="text" required value={contactForm.empresa} onChange={e => setContactForm(f => ({ ...f, empresa: e.target.value }))}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="Nome da empresa" />
+                              className={inputClasses} placeholder="Nome da empresa" />
                           </div>
                         </div>
                         <div className="grid sm:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1.5">E-mail *</label>
                             <input type="email" required value={contactForm.email} onChange={e => setContactForm(f => ({ ...f, email: e.target.value }))}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="email@empresa.com" />
+                              className={inputClasses} placeholder="email@empresa.com" />
                           </div>
                           <div>
                             <label className="block text-xs font-medium text-gray-600 mb-1.5">Telefone</label>
                             <input type="tel" value={contactForm.telefone} onChange={e => setContactForm(f => ({ ...f, telefone: e.target.value }))}
-                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="(11) 99999-9999" />
+                              className={inputClasses} placeholder="(11) 99999-9999" />
                           </div>
                         </div>
 
-                        <div className="p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-between">
-                          <div>
-                            <p className="text-xs text-gray-400">Investimento estimado</p>
-                            <p className="text-lg font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
-                              R$ {displayTotal.toLocaleString('pt-BR')}/mês
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-xs text-gray-400">{selectedServices.length} serviços</p>
-                            <p className="text-xs text-gray-400">{colaboradores} colaboradores</p>
-                          </div>
-                        </div>
-
-                        <button type="submit" className="w-full py-4 rounded-full text-base font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-500 shadow-xl shadow-teal-500/20">
-                          Solicitar proposta personalizada
+                        <button type="submit" className="w-full py-4 rounded-full text-base font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-all">
+                          Contratar plano {contractOption.label.toLowerCase()}
                         </button>
+                        <p className="text-[11px] text-gray-400 text-center">
+                          Ao enviar, você receberá a proposta formal por e-mail para assinatura.
+                        </p>
                       </form>
                     )}
                   </motion.div>
@@ -422,7 +517,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
             {/* Footer actions */}
             {!submitted && (
-              <div className="px-8 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
+              <div className="px-8 py-4 border-t border-gray-100 flex items-center justify-between">
                 {step > 1 ? (
                   <button onClick={() => setStep(s => s - 1)} className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
                     ← Voltar
@@ -432,7 +527,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   <button
                     onClick={() => setStep(s => s + 1)}
                     disabled={selected.size === 0}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Continuar <ChevronRight className="w-4 h-4" />
                   </button>
