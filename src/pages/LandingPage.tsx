@@ -243,6 +243,17 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [companyName, setCompanyName] = useState('');
   const [cnpjSearched, setCnpjSearched] = useState(false);
   const [cnpjLoading, setCnpjLoading] = useState(false);
+  const [cnpjData, setCnpjData] = useState<{
+    razao_social: string;
+    nome_fantasia: string;
+    cnae_fiscal_descricao: string;
+    porte: string;
+    municipio: string;
+    uf: string;
+    situacao_cadastral: string;
+    cnae_fiscal: number;
+  } | null>(null);
+  const [cnpjError, setCnpjError] = useState('');
 
   const industryProfile = industryProfiles[industry] || null;
 
@@ -255,15 +266,66 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
       .replace(/^(\d{2})/, '$1');
   };
 
+  // Map CNAE to industry
+  const detectIndustry = (cnae: number, descricao: string): string => {
+    const desc = descricao.toLowerCase();
+    if (cnae >= 10000 && cnae < 34000 || desc.includes('indústria') || desc.includes('manufat') || desc.includes('fabricação')) return 'industria';
+    if (cnae >= 45000 && cnae < 48000 || desc.includes('comércio') || desc.includes('varejo') || desc.includes('loja')) return 'comercio';
+    if (cnae >= 86000 && cnae < 87000 || desc.includes('saúde') || desc.includes('hospital') || desc.includes('médic') || desc.includes('clínica')) return 'saude';
+    if (cnae >= 41000 && cnae < 44000 || desc.includes('construção') || desc.includes('obra') || desc.includes('edificação')) return 'construcao';
+    if (cnae >= 62000 && cnae < 64000 || desc.includes('informática') || desc.includes('tecnologia') || desc.includes('software') || desc.includes('desenvolvimento')) return 'tecnologia';
+    if (cnae >= 49000 && cnae < 54000 || desc.includes('transporte') || desc.includes('logística') || desc.includes('armazen')) return 'logistica';
+    if (cnae >= 56000 && cnae < 57000 || desc.includes('alimentação') || desc.includes('restaurante') || desc.includes('bar') || desc.includes('lanchonete')) return 'alimentacao';
+    if (cnae >= 85000 && cnae < 86000 || desc.includes('educação') || desc.includes('ensino') || desc.includes('escola')) return 'educacao';
+    return 'outros';
+  };
+
+  // Map porte from ReceitaWS
+  const detectPorte = (porte: string): string => {
+    const p = porte.toLowerCase();
+    if (p.includes('mei')) return 'mei';
+    if (p.includes('micro')) return 'me';
+    if (p.includes('pequeno')) return 'epp';
+    if (p.includes('demais')) return 'grande';
+    return 'medio';
+  };
+
   const handleCnpjSearch = async () => {
     const nums = cnpj.replace(/\D/g, '');
     if (nums.length !== 14) return;
     setCnpjLoading(true);
-    // Simulate CNPJ lookup (in production, use ReceitaWS or similar)
-    await new Promise(r => setTimeout(r, 1200));
-    // Mock result based on CNPJ
-    setCompanyName('Empresa identificada via CNPJ');
-    setCnpjSearched(true);
+    setCnpjError('');
+    setCnpjData(null);
+    try {
+      const res = await fetch(`https://brasilapi.com.br/api/cnpj/v1/${nums}`);
+      if (!res.ok) throw new Error('CNPJ não encontrado');
+      const data = await res.json();
+      const result = {
+        razao_social: data.razao_social || '',
+        nome_fantasia: data.nome_fantasia || '',
+        cnae_fiscal_descricao: data.cnae_fiscal_descricao || '',
+        porte: data.porte || '',
+        municipio: data.municipio || '',
+        uf: data.uf || '',
+        situacao_cadastral: data.descricao_situacao_cadastral || data.situacao_cadastral || '',
+        cnae_fiscal: data.cnae_fiscal || 0,
+      };
+      setCnpjData(result);
+      setCompanyName(result.nome_fantasia || result.razao_social);
+      setCnpjSearched(true);
+
+      // Auto-detect industry & porte
+      const detectedIndustry = detectIndustry(result.cnae_fiscal, result.cnae_fiscal_descricao);
+      setIndustry(detectedIndustry);
+      const detectedPorte = detectPorte(result.porte);
+      setCompanyType(detectedPorte);
+
+      // Pre-fill contact form
+      setContactForm(f => ({ ...f, empresa: result.nome_fantasia || result.razao_social }));
+    } catch {
+      setCnpjError('CNPJ não encontrado. Verifique o número e tente novamente.');
+      setCnpjSearched(false);
+    }
     setCnpjLoading(false);
   };
 
@@ -309,6 +371,8 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     setIndustry('');
     setCompanyName('');
     setCnpjSearched(false);
+    setCnpjData(null);
+    setCnpjError('');
     onClose();
   };
 
@@ -415,14 +479,56 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                           Buscar
                         </button>
                       </div>
-                      {cnpjSearched && (
+                      {cnpjError && (
                         <motion.div
                           initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mt-2 p-3 rounded-xl bg-teal-50 border border-teal-200 flex items-center gap-2"
+                          className="mt-2 p-3 rounded-xl bg-red-50 border border-red-200"
                         >
-                          <Building2 className="w-4 h-4 text-teal-600 shrink-0" />
-                          <p className="text-sm text-teal-800 font-medium">{companyName}</p>
+                          <p className="text-sm text-red-700">{cnpjError}</p>
+                        </motion.div>
+                      )}
+                      {cnpjSearched && cnpjData && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-3 p-4 rounded-xl bg-teal-50 border border-teal-200"
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <Building2 className="w-4 h-4 text-teal-600 shrink-0" />
+                            <p className="text-sm font-bold text-teal-900">
+                              {cnpjData.nome_fantasia || cnpjData.razao_social}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                            <div>
+                              <span className="text-gray-400">Razão Social:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.razao_social}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">CNAE:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.cnae_fiscal_descricao}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Porte:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.porte}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Localização:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.municipio}/{cnpjData.uf}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Situação:</span>
+                              <p className={`font-medium ${cnpjData.situacao_cadastral?.toLowerCase().includes('ativa') ? 'text-teal-700' : 'text-red-600'}`}>
+                                {cnpjData.situacao_cadastral}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-2 pt-2 border-t border-teal-200/50">
+                            <p className="text-[11px] text-teal-700 italic">
+                              ✓ Porte e ramo de atuação preenchidos automaticamente com base no CNAE
+                            </p>
+                          </div>
                         </motion.div>
                       )}
                     </div>
