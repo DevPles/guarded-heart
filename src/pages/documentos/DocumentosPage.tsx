@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, FileText, PenTool } from 'lucide-react';
+
 
 const TIPO_DOC_OPTIONS = [
   { value: 'AEP', label: 'AEP' },
@@ -125,8 +125,8 @@ const DocumentosPage = () => {
 
       <Tabs defaultValue="documentos">
         <TabsList>
-          <TabsTrigger value="documentos"><FileText className="h-4 w-4 mr-1" /> Documentos</TabsTrigger>
-          <TabsTrigger value="assinaturas"><PenTool className="h-4 w-4 mr-1" /> Assinaturas</TabsTrigger>
+          <TabsTrigger value="documentos">Documentos</TabsTrigger>
+          <TabsTrigger value="assinaturas">Assinaturas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="documentos" className="space-y-4">
@@ -134,7 +134,7 @@ const DocumentosPage = () => {
             <Dialog open={showNew} onOpenChange={setShowNew}>
               <DialogTrigger asChild>
                 <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Plus className="h-4 w-4 mr-1" /> Novo Documento
+                  Novo Documento
                 </Button>
               </DialogTrigger>
               <DialogContent>

@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, FileText, Calendar, Activity } from 'lucide-react';
+
 
 const PCMSOPage = () => {
   const { toast } = useToast();
@@ -128,8 +128,8 @@ const PCMSOPage = () => {
 
       <Tabs defaultValue="programas">
         <TabsList>
-          <TabsTrigger value="programas"><FileText className="h-4 w-4 mr-1" /> Programas</TabsTrigger>
-          <TabsTrigger value="eventos"><Calendar className="h-4 w-4 mr-1" /> Exames / Eventos</TabsTrigger>
+          <TabsTrigger value="programas">Programas</TabsTrigger>
+          <TabsTrigger value="eventos">Exames / Eventos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="programas" className="space-y-4">
@@ -137,7 +137,7 @@ const PCMSOPage = () => {
             <Dialog open={showNewPrograma} onOpenChange={setShowNewPrograma}>
               <DialogTrigger asChild>
                 <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Plus className="h-4 w-4 mr-1" /> Novo Programa
+                  Novo Programa
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -217,7 +217,7 @@ const PCMSOPage = () => {
             <Dialog open={showNewEvento} onOpenChange={setShowNewEvento}>
               <DialogTrigger asChild>
                 <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Plus className="h-4 w-4 mr-1" /> Novo Exame
+                  Novo Exame
                 </Button>
               </DialogTrigger>
               <DialogContent>
