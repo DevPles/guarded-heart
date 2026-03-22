@@ -6,6 +6,10 @@ import logoErgon from '@/assets/logo-ergon.png';
 import heroImg1 from '@/assets/landing-hero-1.jpg';
 import heroImg2 from '@/assets/landing-hero-2.jpg';
 import heroImg3 from '@/assets/landing-hero-3.jpg';
+import teamPericles from '@/assets/team-pericles.jpg';
+import teamRayssa from '@/assets/team-rayssa.jpg';
+import teamKaren from '@/assets/team-karen.jpg';
+import teamRodrigo from '@/assets/team-rodrigo.jpg';
 
 /* ── Animated text block ── */
 function ScrollText({
@@ -576,6 +580,7 @@ const LandingPage = () => {
             <a href="#problema" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Problema</a>
             <a href="#solucao" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Solução</a>
             <a href="#planos" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Planos</a>
+            <a href="#quem-somos" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Quem Somos</a>
             <a href="#contato" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Contato</a>
           </div>
           <div className="flex items-center gap-3">
@@ -715,7 +720,79 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* PLANOS — CTA para abrir simulador */}
+      {/* QUEM SOMOS */}
+      <section id="quem-somos" className="py-32 px-6 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <ScrollText direction="up">
+            <p className="text-xs uppercase tracking-widest text-teal-600 font-semibold text-center mb-3">Quem somos</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 mb-6 leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+              Experiência real aplicada<br />à saúde ocupacional
+            </h2>
+          </ScrollText>
+          <ScrollText direction="up" delay={0.15}>
+            <p className="text-lg text-gray-500 max-w-3xl mx-auto text-center leading-relaxed mb-20">
+              O ERGON nasce da união entre tecnologia e prática de campo. Foi desenvolvido por profissionais que atuam diretamente na operação, gestão e análise de saúde ocupacional, entendendo na prática os desafios enfrentados pelas empresas.
+            </p>
+          </ScrollText>
+
+          <div className="grid md:grid-cols-2 gap-x-12 gap-y-16">
+            {[
+              {
+                img: teamPericles,
+                name: 'Pericles Moreira',
+                role: 'Especialista em Desenvolvimento de Sistemas',
+                desc: 'Mais de 16 anos de experiência na estruturação de soluções digitais para gestão e controle em saúde, com atuação nos mais distintos ramos da tecnologia aplicada.',
+              },
+              {
+                img: teamRayssa,
+                name: 'Rayssa Leslie',
+                role: 'Enfermeira do Trabalho e Ergonomista',
+                desc: 'Mais de 12 anos de experiência em assistência, prevenção e análise ergonômica, com especialização em saúde ocupacional e avaliação de riscos.',
+              },
+              {
+                img: teamKaren,
+                name: 'Karen Luise',
+                role: 'Engenheira de Processos',
+                desc: 'Mais de 8 anos de experiência em melhoria contínua, padronização de processos e estruturação operacional com foco em qualidade.',
+              },
+              {
+                img: teamRodrigo,
+                name: 'Rodrigo Marzola',
+                role: 'Especialista em Gestão e Operações Laborais',
+                desc: 'Mais de 22 anos de experiência em operação, supervisão e acompanhamento técnico de atividades laborais em ambientes industriais e corporativos.',
+              },
+            ].map((person, i) => (
+              <ScrollText key={person.name} direction={i % 2 === 0 ? 'left' : 'right'} delay={i * 0.1}>
+                <div className="flex gap-6 items-start">
+                  <div className="shrink-0">
+                    <div className="w-28 h-36 rounded-2xl overflow-hidden shadow-lg">
+                      <img src={person.img} alt={person.name} className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <h3 className="text-xl font-bold text-gray-900 mb-1" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                      {person.name}
+                    </h3>
+                    <p className="text-sm font-semibold text-teal-600 mb-3">{person.role}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed">{person.desc}</p>
+                  </div>
+                </div>
+              </ScrollText>
+            ))}
+          </div>
+
+          <ScrollText direction="up" delay={0.3}>
+            <div className="mt-20 text-center">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 leading-relaxed max-w-3xl mx-auto" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                "Mais do que um sistema, o ERGON é resultado de
+                <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent"> experiência real </span>
+                aplicada à necessidade das empresas."
+              </p>
+            </div>
+          </ScrollText>
+        </div>
+      </section>
+
       <section id="planos" className="py-32 px-6 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <ScrollText direction="up">
