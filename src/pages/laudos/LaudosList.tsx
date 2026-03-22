@@ -163,7 +163,7 @@ const LaudosList = () => {
                     <TableCell className="font-medium">{a.title || 'Sem título'}</TableCell>
                     <TableCell><Badge variant="outline">{typeLabel[a.type] || a.type}</Badge></TableCell>
                     <TableCell>{(a.empresas as any)?.razao_social || '—'}</TableCell>
-                    <TableCell className="font-mono">{Number(a.score_total).toFixed(1)}</TableCell>
+                    <TableCell className="font-mono">{a.score_total != null ? Number(a.score_total).toFixed(1) : '—'}</TableCell>
                     <TableCell>
                       <Badge variant={a.risk_classification === 'baixo' ? 'secondary' : a.risk_classification === 'moderado' ? 'default' : 'destructive'}>
                         {a.risk_classification || '—'}
