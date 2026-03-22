@@ -82,9 +82,10 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            <Route path="/" element={<LandingOrHome />} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-              <Route path="/" element={<LandingOrHome />} />
-              <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+              <Route path="/home" element={<Home />} />
               <Route path="/meu-painel" element={<RoleGuard allowed={['colaborador']}><ColaboradorPortal /></RoleGuard>} />
               <Route path="/painel-consultor" element={<RoleGuard allowed={['consultor']}><ConsultorDashboard /></RoleGuard>} />
               <Route path="/painel-empresa" element={<RoleGuard allowed={['empresa_admin']}><EmpresaAdminDashboard /></RoleGuard>} />
@@ -105,7 +106,6 @@ const App = () => (
               <Route path="/planos-acao" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><PlanosAcaoList /></RoleGuard>} />
               <Route path="/planos-acao/:id" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><PlanoAcaoForm /></RoleGuard>} />
               <Route path="/laudos" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><LaudosList /></RoleGuard>} />
-              
               <Route path="/dashboard" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><DashboardPage /></RoleGuard>} />
               <Route path="/configuracoes" element={<RoleGuard allowed={['admin_master']}><ConfiguracoesPage /></RoleGuard>} />
             </Route>
