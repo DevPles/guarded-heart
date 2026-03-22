@@ -201,26 +201,38 @@ const ARPForm = () => {
         </CardContent>
       </Card>
 
-      {/* Questions */}
-      <Card className="mb-6">
-        <CardHeader><CardTitle>Fatores Psicossociais (score 0–3)</CardTitle></CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            {ARP_QUESTIONS.map((q, i) => (
-              <div key={i} className="border-b pb-4 last:border-b-0 last:pb-0">
-                <p className="text-sm font-medium mb-3">{i + 1}) {q}</p>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {SCORE_LABELS.map((label, val) => (
-                    <Button key={val} type="button" variant={values[i] === val ? 'default' : 'outline'} size="sm"
-                      onClick={() => setValues((prev) => ({ ...prev, [i]: val }))}>{label}</Button>
-                  ))}
-                </div>
-                <Input placeholder="Observação (opcional)" value={comments[i] || ''} onChange={(e) => setComments((prev) => ({ ...prev, [i]: e.target.value }))} className="mt-2" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Questions in Cards Grid */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-4">Fatores Psicossociais (score 0–3)</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {ARP_QUESTIONS.map((q, i) => {
+            const val = values[i] ?? 0;
+            const isCriticalItem = (i === 9 || i === 10) && val >= 2;
+            return (
+              <Card key={i} className={isCriticalItem ? 'border-destructive border-2' : val === 3 ? 'border-amber-500 border' : ''}>
+                <CardContent className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium leading-snug">{i + 1}) {q}</p>
+                    {val > 0 && (
+                      <Badge variant={val === 3 ? 'destructive' : val === 2 ? 'default' : 'secondary'} className="shrink-0 text-xs">
+                        {val}/3
+                      </Badge>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {SCORE_LABELS.map((label, v) => (
+                      <Button key={v} type="button" variant={values[i] === v ? 'default' : 'outline'} size="sm"
+                        className="text-xs h-8 justify-start"
+                        onClick={() => setValues((prev) => ({ ...prev, [i]: v }))}>{label}</Button>
+                    ))}
+                  </div>
+                  <Input placeholder="Observação (opcional)" value={comments[i] || ''} onChange={(e) => setComments((prev) => ({ ...prev, [i]: e.target.value }))} className="text-sm h-8" />
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
 
       <div className="flex flex-wrap gap-4 mb-8">
         <Button variant="outline" onClick={() => navigate('/riscos-psicossociais')}>Cancelar</Button>
