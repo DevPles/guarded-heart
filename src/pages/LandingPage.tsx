@@ -603,11 +603,13 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                                         className="overflow-hidden"
                                       >
                                         <div className="mt-3 pt-3 border-t border-teal-200/50">
-                                          <p className="text-xs text-gray-500 mb-2">{service.riskContext}</p>
+                                          <p className="text-xs text-gray-500 mb-2">
+                                            {industryProfile ? `No setor de ${industryProfile.label}: ` : ''}{service.riskContext}
+                                          </p>
                                           <div className="flex items-center gap-4">
                                             <div className="flex-1">
-                                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Custo médio sem proteção</p>
-                                              <p className="text-sm font-bold text-red-500">R$ {service.avgLawsuitCost.toLocaleString('pt-BR')}</p>
+                                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Custo médio{industryProfile ? ' no seu setor' : ''}</p>
+                                              <p className="text-sm font-bold text-red-500">R$ {Math.round(service.avgLawsuitCost * riskMult).toLocaleString('pt-BR')}</p>
                                             </div>
                                             <div className="flex-1">
                                               <p className="text-[10px] text-gray-400 uppercase tracking-wider">Redução com Ergon</p>
