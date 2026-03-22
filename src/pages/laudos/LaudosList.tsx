@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { generateAepPdf } from '@/utils/aepPdfReport';
 import { generateAetPdf } from '@/utils/aetPdfReport';
 import { generateArpPdf } from '@/utils/arpPdfReport';
-import { loadBrandLogo } from '@/utils/pdfDownload';
+
 
 const LaudosList = () => {
   const { toast } = useToast();
