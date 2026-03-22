@@ -97,7 +97,7 @@ const DocumentosPage = () => {
         <Select value={empresaFilter} onValueChange={setEmpresaFilter}>
           <SelectTrigger className="w-60"><SelectValue placeholder="Filtrar empresa..." /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
             {empresas.map((e: any) => <SelectItem key={e.id} value={e.id}>{e.razao_social}</SelectItem>)}
           </SelectContent>
         </Select>
