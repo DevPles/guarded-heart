@@ -8,6 +8,7 @@ import LaudosTab from './tabs/LaudosTab';
 import IndicadoresTab from './tabs/IndicadoresTab';
 import DashboardExecutivoTab from './tabs/DashboardExecutivoTab';
 import ConfigGeraisTab from './tabs/ConfigGeraisTab';
+import NotificacoesConfigTab from './tabs/NotificacoesConfigTab';
 
 const ConfiguracoesPage = () => {
   return (
@@ -29,7 +30,8 @@ const ConfiguracoesPage = () => {
                 <TabsTrigger value="laudos">Laudos</TabsTrigger>
                 <TabsTrigger value="indicadores">Indicadores Globais</TabsTrigger>
                 <TabsTrigger value="dashboard">Dashboard Executivo</TabsTrigger>
-                <TabsTrigger value="config">Configurações Gerais</TabsTrigger>
+                <TabsTrigger value="notificacoes">Notificações</TabsTrigger>
+                <TabsTrigger value="config">Config. Gerais</TabsTrigger>
               </TabsList>
             </div>
 
@@ -41,6 +43,7 @@ const ConfiguracoesPage = () => {
               <TabsContent value="laudos" className="mt-0"><LaudosTab /></TabsContent>
               <TabsContent value="indicadores" className="mt-0"><IndicadoresTab /></TabsContent>
               <TabsContent value="dashboard" className="mt-0"><DashboardExecutivoTab /></TabsContent>
+              <TabsContent value="notificacoes" className="mt-0"><NotificacoesConfigTab /></TabsContent>
               <TabsContent value="config" className="mt-0"><ConfigGeraisTab /></TabsContent>
             </div>
           </Tabs>
