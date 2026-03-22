@@ -284,8 +284,9 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const totalContract = monthlyWithDiscount * contractOption.months;
   const savings = contractOption.discount > 0 ? (monthlyWithMarkup - monthlyWithDiscount) * contractOption.months : 0;
 
-  // Cálculos de impacto — risco total e economia potencial
-  const totalRiskExposure = selectedServices.reduce((sum, s) => sum + s.avgLawsuitCost, 0);
+  // Cálculos de impacto — com multiplicador do setor
+  const riskMult = industryProfile?.riskMultiplier || 1.0;
+  const totalRiskExposure = selectedServices.reduce((sum, s) => sum + Math.round(s.avgLawsuitCost * riskMult), 0);
   const avgReduction = selectedServices.length > 0
     ? selectedServices.reduce((sum, s) => sum + s.riskReduction, 0) / selectedServices.length
     : 0;
@@ -303,8 +304,15 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     setContactForm({ nome: '', empresa: '', email: '', telefone: '' });
     setColaboradores(50);
     setSelectedContract(12);
+    setCnpj('');
+    setCompanyType('');
+    setIndustry('');
+    setCompanyName('');
+    setCnpjSearched(false);
     onClose();
   };
+
+  const canAdvanceStep1 = industry !== '' && companyType !== '';
 
   const inputClasses = "w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all bg-white";
 
