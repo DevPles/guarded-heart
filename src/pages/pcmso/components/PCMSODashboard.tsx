@@ -98,8 +98,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
 
         <Card className="lg:col-span-1">
           <CardContent className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <FileCheck className="h-4 w-4 text-primary" />
+            <div>
               <h3 className="font-semibold text-sm">Programas Ativos</h3>
             </div>
             <p className="text-3xl font-bold text-primary">{programasAtivos.length}</p>
