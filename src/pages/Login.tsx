@@ -157,15 +157,15 @@ const Login = () => {
 
               {!isSignUp ? (
                 <div className="animate-fade-in">
-                  <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk' }}>
-                    Novo por aqui?
+                  <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
+                    O 1º ecossistema completo de Saúde Ocupacional com evidências
                   </h2>
-                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-8">
-                    Solicite acesso ao sistema de gestão ergonômica e saúde ocupacional.
+                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-6">
+                    AEP, AET, riscos psicossociais, PCMSO, atestados, checklists e monitoramento contínuo — tudo integrado em uma única plataforma baseada em dados.
                   </p>
                   <Button
                     variant="outline"
-                    className="border-white/40 text-white bg-transparent hover:bg-white/10 hover:text-white h-12 px-8 text-base"
+                    className="rounded-full border-white/40 text-white bg-transparent hover:bg-white/10 hover:text-white h-12 px-8 text-base"
                     onClick={() => setIsSignUp(true)}
                   >
                     Cadastrar
@@ -173,15 +173,15 @@ const Login = () => {
                 </div>
               ) : (
                 <div className="animate-fade-in">
-                  <h2 className="text-3xl font-bold text-white mb-4" style={{ fontFamily: 'Space Grotesk' }}>
-                    Bem-vindo!
+                  <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
+                    O 1º ecossistema completo de Saúde Ocupacional com evidências
                   </h2>
-                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-8">
-                    Acesse o sistema com suas credenciais fornecidas pelo administrador.
+                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-6">
+                    Gerencie ergonomia, saúde e segurança do trabalho com rastreabilidade total e decisões baseadas em dados reais.
                   </p>
                   <Button
                     variant="outline"
-                    className="border-white/40 text-white bg-transparent hover:bg-white/10 hover:text-white h-12 px-8 text-base"
+                    className="rounded-full border-white/40 text-white bg-transparent hover:bg-white/10 hover:text-white h-12 px-8 text-base"
                     onClick={() => setIsSignUp(false)}
                   >
                     Entrar
