@@ -84,13 +84,13 @@ const NotificacoesPage = () => {
                 </div>
                 <div className="flex gap-1 shrink-0">
                   {isPending && (
-                    <Button variant="ghost" size="sm" onClick={() => markAsRead.mutate(n.id)}>Marcar lida</Button>
+                    <Button variant="ghost" size="sm" className="rounded-full" onClick={() => markAsRead.mutate(n.id)}>Marcar lida</Button>
                   )}
                   {n.status !== 'resolved' && (
-                    <Button variant="ghost" size="sm" onClick={() => markAsResolved.mutate(n.id)}>Resolver</Button>
+                    <Button variant="ghost" size="sm" className="rounded-full" onClick={() => markAsResolved.mutate(n.id)}>Resolver</Button>
                   )}
                   {n.action_link && (
-                    <Button variant="outline" size="sm" onClick={() => navigate(n.action_link!)}>Ver</Button>
+                    <Button variant="outline" size="sm" className="rounded-full" onClick={() => navigate(n.action_link!)}>Ver</Button>
                   )}
                 </div>
               </CardContent>
