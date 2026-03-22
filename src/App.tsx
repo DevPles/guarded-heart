@@ -63,9 +63,10 @@ const RoleGuard = ({ children, allowed }: { children: React.ReactNode; allowed: 
   return <>{children}</>;
 };
 
-const RoleBasedHome = () => {
-  const { primaryRole, loading } = useAuth();
-  if (loading) return null;
+const LandingOrHome = () => {
+  const { session, loading, primaryRole } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-muted-foreground">Carregando...</div>;
+  if (!session) return <LandingPage />;
   if (primaryRole === 'colaborador') return <Navigate to="/meu-painel" replace />;
   if (primaryRole === 'consultor') return <Navigate to="/painel-consultor" replace />;
   if (primaryRole === 'empresa_admin') return <Navigate to="/painel-empresa" replace />;
