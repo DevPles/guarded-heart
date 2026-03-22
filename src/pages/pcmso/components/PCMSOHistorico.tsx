@@ -57,8 +57,7 @@ const PCMSOHistorico = ({ eventos }: Props) => {
                   <Card className={`flex-1 ${isVencido ? 'border-red-200 dark:border-red-900' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-2">
-                          {getIcon(ev)}
+                        <div>
                           <div>
                             <p className="font-medium text-sm">{ev.colaboradores?.nome_completo}</p>
                             <p className="text-xs text-muted-foreground">{ev.empresas?.razao_social}</p>

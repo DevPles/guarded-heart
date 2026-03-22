@@ -58,7 +58,7 @@ const PCMSOProgramas = ({ empresas, programas }: Props) => {
         <Dialog open={showNew} onOpenChange={setShowNew}>
           <DialogTrigger asChild>
             <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Plus className="h-4 w-4 mr-1" /> Novo Programa
+              Novo Programa
             </Button>
           </DialogTrigger>
           <DialogContent>

@@ -142,8 +142,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
       {proximosVencer.length > 0 && (
         <Card className="border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/20">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <CalendarClock className="h-4 w-4 text-amber-600" />
+            <div className="mb-3">
               <h3 className="font-semibold text-sm text-amber-700 dark:text-amber-400">Vencendo nos próximos 30 dias</h3>
             </div>
             <div className="space-y-2">
