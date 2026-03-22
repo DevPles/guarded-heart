@@ -11,6 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { FileDown } from 'lucide-react';
+import { generateArpPdf, ArpReportData } from '@/utils/arpPdfReport';
+import { fetchCompanyLogoUrl, fetchEvaluatorLabel } from '@/utils/reportBranding';
 
 const ARP_QUESTIONS = [
   'Baixa clareza de papel/função',
