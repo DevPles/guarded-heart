@@ -83,8 +83,8 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-              <Route path="/" element={<RoleBasedHome />} />
+              <Route path="/" element={<LandingOrHome />} />
+              <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
               <Route path="/meu-painel" element={<RoleGuard allowed={['colaborador']}><ColaboradorPortal /></RoleGuard>} />
               <Route path="/painel-consultor" element={<RoleGuard allowed={['consultor']}><ConsultorDashboard /></RoleGuard>} />
               <Route path="/painel-empresa" element={<RoleGuard allowed={['empresa_admin']}><EmpresaAdminDashboard /></RoleGuard>} />
