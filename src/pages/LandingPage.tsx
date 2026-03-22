@@ -344,14 +344,16 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100">
               <div>
                 <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-                  {step === 1 && 'Monte seu plano de proteção'}
-                  {step === 2 && 'Escolha o período de contratação'}
-                  {step === 3 && 'Finalizar contratação'}
+                  {step === 1 && 'Identifique sua empresa'}
+                  {step === 2 && 'Monte seu plano de proteção'}
+                  {step === 3 && 'Escolha o período de contratação'}
+                  {step === 4 && 'Finalizar contratação'}
                 </h2>
                 <p className="text-sm text-gray-400 mt-0.5">
-                  {step === 1 && 'Selecione os serviços que sua empresa precisa'}
-                  {step === 2 && 'Quanto maior o período, menor o investimento mensal'}
-                  {step === 3 && 'Preencha seus dados para receber a proposta formal'}
+                  {step === 1 && 'Vamos analisar os riscos específicos do seu segmento'}
+                  {step === 2 && (industryProfile ? `Serviços recomendados para ${industryProfile.label}` : 'Selecione os serviços que sua empresa precisa')}
+                  {step === 3 && 'Quanto maior o período, menor o investimento mensal'}
+                  {step === 4 && 'Preencha seus dados para receber a proposta formal'}
                 </p>
               </div>
               <button onClick={reset} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
@@ -361,7 +363,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
             {/* Steps indicator */}
             <div className="px-8 py-3 flex items-center gap-2 border-b border-gray-50">
-              {[1, 2, 3].map(s => (
+              {[1, 2, 3, 4].map(s => (
                 <div key={s} className="flex items-center gap-2">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
                     step > s
@@ -372,7 +374,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   }`}>
                     {step > s ? <Check className="w-4 h-4" /> : s}
                   </div>
-                  {s < 3 && <div className={`w-12 h-0.5 rounded-full transition-all duration-300 ${step > s ? 'bg-teal-400' : 'bg-gray-200'}`} />}
+                  {s < 4 && <div className={`w-8 h-0.5 rounded-full transition-all duration-300 ${step > s ? 'bg-teal-400' : 'bg-gray-200'}`} />}
                 </div>
               ))}
             </div>
@@ -380,7 +382,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-8 py-6">
               <AnimatePresence mode="wait">
-                {/* STEP 1 — Select services */}
+                {/* STEP 1 — Company identification */}
                 {step === 1 && (
                   <motion.div
                     key="step1"
@@ -389,6 +391,159 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                     exit={{ opacity: 0, x: -30 }}
                     transition={{ duration: 0.3 }}
                   >
+                    {/* CNPJ */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">CNPJ (opcional)</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={cnpj}
+                          onChange={e => { setCnpj(formatCnpj(e.target.value)); setCnpjSearched(false); }}
+                          className={inputClasses}
+                          placeholder="00.000.000/0000-00"
+                        />
+                        <button
+                          onClick={handleCnpjSearch}
+                          disabled={cnpj.replace(/\D/g, '').length !== 14 || cnpjLoading}
+                          className="px-4 rounded-xl bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-all disabled:opacity-40 shrink-0 flex items-center gap-2"
+                        >
+                          {cnpjLoading ? (
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <Search className="w-4 h-4" />
+                          )}
+                          Buscar
+                        </button>
+                      </div>
+                      {cnpjSearched && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-2 p-3 rounded-xl bg-teal-50 border border-teal-200 flex items-center gap-2"
+                        >
+                          <Building2 className="w-4 h-4 text-teal-600 shrink-0" />
+                          <p className="text-sm text-teal-800 font-medium">{companyName}</p>
+                        </motion.div>
+                      )}
+                    </div>
+
+                    {/* Company type */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Porte da empresa *</label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {companyTypes.map(ct => (
+                          <button
+                            key={ct.value}
+                            onClick={() => setCompanyType(ct.value)}
+                            className={`p-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
+                              companyType === ct.value
+                                ? 'border-teal-400 bg-teal-50 text-gray-900'
+                                : 'border-gray-100 text-gray-500 hover:border-gray-200'
+                            }`}
+                          >
+                            {ct.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Industry */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Ramo de atuação *</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {Object.entries(industryProfiles).map(([key, prof]) => (
+                          <button
+                            key={key}
+                            onClick={() => setIndustry(key)}
+                            className={`p-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
+                              industry === key
+                                ? 'border-teal-400 bg-teal-50 text-gray-900'
+                                : 'border-gray-100 text-gray-500 hover:border-gray-200'
+                            }`}
+                          >
+                            {prof.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Industry risk preview */}
+                    <AnimatePresence>
+                      {industryProfile && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0 }}
+                          className="p-5 rounded-2xl bg-gray-900 text-white"
+                        >
+                          <div className="flex items-center gap-2 mb-3">
+                            <AlertTriangle className="w-5 h-5 text-amber-400" />
+                            <p className="text-sm font-bold text-amber-400 uppercase tracking-wider">
+                              Análise de risco: {industryProfile.label}
+                            </p>
+                          </div>
+                          <p className="text-sm text-gray-300 mb-4">{industryProfile.insight}</p>
+                          
+                          <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Condenação média no setor</p>
+                              <p className="text-xl font-bold text-red-400" style={{ fontFamily: "'Space Grotesk'" }}>
+                                R$ {industryProfile.avgCondemnation.toLocaleString('pt-BR')}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Taxa de fiscalização</p>
+                              <p className="text-sm font-bold text-gray-200 mt-1">{industryProfile.fiscalizationRate}</p>
+                            </div>
+                          </div>
+
+                          <div className="mb-3">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Principais riscos do setor</p>
+                            <ul className="space-y-1">
+                              {industryProfile.topRisks.map(r => (
+                                <li key={r} className="flex items-start gap-2 text-sm text-gray-300">
+                                  <span className="text-red-400 mt-0.5">●</span> {r}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div className="pt-3 border-t border-gray-700">
+                            <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">NRs aplicáveis</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {industryProfile.commonNRs.map(nr => (
+                                <span key={nr} className="px-2 py-0.5 rounded-full bg-gray-700 text-xs text-gray-300 font-medium">{nr}</span>
+                              ))}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                )}
+
+                {/* STEP 2 — Select services */}
+                {step === 2 && (
+                  <motion.div
+                    key="step2"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {/* Industry context banner */}
+                    {industryProfile && (
+                      <div className="mb-5 p-4 rounded-xl bg-amber-50 border border-amber-200 flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-amber-900">
+                            Empresas de {industryProfile.label} têm condenação média de R$ {industryProfile.avgCondemnation.toLocaleString('pt-BR')}
+                          </p>
+                          <p className="text-xs text-amber-700 mt-0.5">Selecione os serviços para reduzir sua exposição jurídica</p>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="mb-8 p-5 rounded-2xl bg-gray-50 border border-gray-100">
                       <div className="flex items-center justify-between mb-3">
                         <span className="text-sm font-medium text-gray-600">Nº de colaboradores</span>
