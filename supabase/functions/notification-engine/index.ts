@@ -295,6 +295,91 @@ Deno.serve(async (req) => {
         }
       }
 
+      // 6. Check PCMSO exams overdue
+      const { data: pendingExams } = await supabase
+        .from('pcmso_eventos')
+        .select('id, colaborador_id, empresa_id, tipo, data_prevista, colaboradores:colaborador_id(nome_completo, user_id)')
+        .is('data_realizada', null)
+        .not('data_prevista', 'is', null);
+
+      for (const exam of pendingExams || []) {
+        const examDate = new Date(exam.data_prevista);
+        const diffDays = Math.ceil((examDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+        const shouldAlert = diffDays <= 30;
+        if (!shouldAlert) continue;
+
+        const todayStr = today.toISOString().split('T')[0];
+        const { data: existing } = await supabase
+          .from('notifications')
+          .select('id')
+          .eq('entity_id', exam.id)
+          .eq('type', 'EXAME_VENCIMENTO')
+          .gte('created_at', todayStr);
+        if (existing && existing.length > 0) continue;
+
+        const colUser = (exam.colaboradores as any);
+        const targetUserId = colUser?.user_id;
+        if (!targetUserId) continue;
+
+        await supabase.from('notifications').insert({
+          type: 'EXAME_VENCIMENTO',
+          title: diffDays < 0 ? `Exame ${exam.tipo} VENCIDO` : `Exame ${exam.tipo} em ${diffDays} dias`,
+          description: `Colaborador: ${colUser?.nome_completo}`,
+          user_id: targetUserId,
+          company_id: exam.empresa_id,
+          entity_id: exam.id,
+          entity_type: 'pcmso_evento',
+          priority: diffDays < 0 ? 'critical' : diffDays <= 7 ? 'warning' : 'info',
+          action_link: '/pcmso',
+        });
+        created.push(exam.id);
+      }
+
+      // 7. Check documents expiring
+      const thirtyDaysDoc = new Date();
+      thirtyDaysDoc.setDate(thirtyDaysDoc.getDate() + 30);
+      
+      const { data: expiringDocs } = await supabase
+        .from('documents')
+        .select('id, titulo, tipo_documento, empresa_id, proximo_vencimento')
+        .eq('status', 'vigente')
+        .not('proximo_vencimento', 'is', null)
+        .lte('proximo_vencimento', thirtyDaysDoc.toISOString().split('T')[0]);
+
+      for (const doc of expiringDocs || []) {
+        const docDate = new Date(doc.proximo_vencimento);
+        const diffDays = Math.ceil((docDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+        const todayStr = today.toISOString().split('T')[0];
+        const { data: existing } = await supabase
+          .from('notifications')
+          .select('id')
+          .eq('entity_id', doc.id)
+          .eq('type', 'DOCUMENTO_VENCIMENTO')
+          .gte('created_at', todayStr);
+        if (existing && existing.length > 0) continue;
+
+        const { data: companyUsers } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('empresa_id', doc.empresa_id);
+
+        for (const u of companyUsers || []) {
+          await supabase.from('notifications').insert({
+            type: 'DOCUMENTO_VENCIMENTO',
+            title: diffDays < 0 ? `${doc.tipo_documento} "${doc.titulo}" VENCIDO` : `${doc.tipo_documento} vence em ${diffDays} dias`,
+            description: doc.titulo,
+            user_id: u.id,
+            company_id: doc.empresa_id,
+            entity_id: doc.id,
+            entity_type: 'document',
+            priority: diffDays < 0 ? 'critical' : diffDays <= 7 ? 'warning' : 'info',
+            action_link: '/documentos',
+          });
+          created.push(doc.id);
+        }
+      }
+
       return new Response(JSON.stringify({ success: true, notifications_created: created.length }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
