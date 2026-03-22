@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import { generateAepPdf } from '@/utils/aepPdfReport';
 import { generateAetPdf } from '@/utils/aetPdfReport';
 import { generateArpPdf } from '@/utils/arpPdfReport';
-import { loadBrandLogo } from '@/utils/pdfDownload';
+
 
 const LaudosList = () => {
   const { toast } = useToast();
@@ -53,34 +53,41 @@ const LaudosList = () => {
   const handleDownload = async (assessment: any) => {
     setDownloading(assessment.id);
     try {
-      const brandLogo = await loadBrandLogo();
       const empresa = (assessment.empresas as any)?.razao_social || '';
       const items = (assessment.assessment_items || []).map((item: any) => ({
         domain: item.domain,
         question_number: item.question_number,
         question_text: item.question_text,
-        value: item.value,
+        value: item.value ?? 0,
         comment: item.comment,
-        weight: item.weight,
+        weight: item.weight ?? 1,
         na_flag: item.na_flag,
+        number: item.question_number,
+        text: item.question_text,
       }));
-
-      const baseData = {
-        title: assessment.title || 'Sem título',
-        empresa,
-        score: assessment.score_total ?? 0,
-        classification: assessment.risk_classification || 'baixo',
-        evaluator: '',
-        date: assessment.finalized_at ? format(new Date(assessment.finalized_at), 'dd/MM/yyyy') : format(new Date(), 'dd/MM/yyyy'),
-        items,
-      };
+      const dateStr = assessment.finalized_at ? format(new Date(assessment.finalized_at), 'dd/MM/yyyy') : format(new Date(), 'dd/MM/yyyy');
+      const totalScore = Number(assessment.score_total) || 0;
+      const classification = assessment.risk_classification || 'baixo';
 
       if (assessment.type === 'aep') {
-        await generateAepPdf(baseData as any);
+        const domains = [...new Set(items.map((i: any) => i.domain))] as string[];
+        const blocks = domains.map(d => {
+          const domainItems = items.filter((i: any) => i.domain === d);
+          const score = domainItems.reduce((s: number, i: any) => s + (i.value ?? 0), 0);
+          return {
+            label: d, domain: d, weight: domainItems[0]?.weight ?? 1, score,
+            questions: domainItems.map((i: any) => ({ number: i.question_number, text: i.question_text, value: i.value ?? 0, comment: i.comment })),
+          };
+        });
+        await generateAepPdf({ title: assessment.title || 'Sem título', empresa, evaluator: '', date: dateStr, totalScore, classification, needsAet: assessment.needs_aet ?? false, blocks });
       } else if (assessment.type === 'aet') {
-        await generateAetPdf({ ...baseData, sections: items } as any);
+        const sectionEntries = items.map((i: any) => ({ title: i.domain, content: i.comment || i.question_text }));
+        const checklist = items.map((i: any) => ({ label: i.question_text, checked: (i.value ?? 0) > 0 }));
+        await generateAetPdf({ title: assessment.title || 'Sem título', empresa, evaluator: '', date: dateStr, sectionEntries, checklist });
       } else if (assessment.type === 'arp') {
-        await generateArpPdf(baseData as any);
+        const questions = items.map((i: any) => ({ number: i.question_number, text: i.question_text, value: i.value ?? 0, comment: i.comment }));
+        const hasCritical = classification === 'critico';
+        await generateArpPdf({ title: assessment.title || 'Sem título', empresa, evaluator: '', date: dateStr, totalScore, classification, hasCritical, questions });
       }
 
       toast({ title: 'PDF gerado com sucesso' });
@@ -156,7 +163,7 @@ const LaudosList = () => {
                     <TableCell className="font-medium">{a.title || 'Sem título'}</TableCell>
                     <TableCell><Badge variant="outline">{typeLabel[a.type] || a.type}</Badge></TableCell>
                     <TableCell>{(a.empresas as any)?.razao_social || '—'}</TableCell>
-                    <TableCell className="font-mono">{Number(a.score_total).toFixed(1)}</TableCell>
+                    <TableCell className="font-mono">{a.score_total != null ? Number(a.score_total).toFixed(1) : '—'}</TableCell>
                     <TableCell>
                       <Badge variant={a.risk_classification === 'baixo' ? 'secondary' : a.risk_classification === 'moderado' ? 'default' : 'destructive'}>
                         {a.risk_classification || '—'}
