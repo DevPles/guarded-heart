@@ -394,7 +394,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={reset}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-black/50 backdrop-blur-md"
           />
 
           <motion.div
@@ -402,10 +402,15 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+            className="relative w-full max-w-3xl max-h-[90vh] rounded-3xl overflow-hidden flex flex-col border border-white/30 shadow-[0_8px_60px_-12px_rgba(0,0,0,0.4)]"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.65) 50%, rgba(240,248,255,0.72) 100%)',
+              backdropFilter: 'blur(40px) saturate(1.6)',
+              WebkitBackdropFilter: 'blur(40px) saturate(1.6)',
+            }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100">
+            <div className="flex items-center justify-between px-8 py-5 border-b border-white/30 bg-white/20">
               <div>
                 <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   {step === 1 && 'Identifique sua empresa'}
