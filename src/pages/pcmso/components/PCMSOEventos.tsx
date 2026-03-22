@@ -78,9 +78,8 @@ const PCMSOEventos = ({ empresas, eventos, empresaFilter }: Props) => {
     <div className="space-y-4">
       {/* Filters bar */}
       <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px] max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar colaborador..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-9" />
+        <div className="flex-1 min-w-[200px] max-w-xs">
+          <Input placeholder="Buscar colaborador..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
         <Select value={tipoFilter} onValueChange={setTipoFilter}>
           <SelectTrigger className="w-44"><SelectValue placeholder="Tipo" /></SelectTrigger>
