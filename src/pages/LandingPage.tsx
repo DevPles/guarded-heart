@@ -419,7 +419,7 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                             <div className="flex items-center justify-between">
                               <div>
                                 <p className="text-base font-bold text-gray-900">{opt.label}</p>
-                                <p className="text-xs text-gray-400 mt-0.5">{opt.months} meses de contrato</p>
+                                <p className="text-xs text-gray-400 mt-0.5">{opt.months === 1 ? 'Sem fidelidade' : `${opt.months} meses de contrato`}</p>
                               </div>
                               <div className="text-right">
                                 <p className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
