@@ -102,7 +102,8 @@ const protectionBenefits = [
 const premiumBenefit = 'Laudos com validade jurídica assinados pelo colaborador — a prova que seu advogado precisa para vencer processos trabalhistas';
 
 const contractOptions = [
-  { months: 6, discount: 0, label: 'Semestral', tag: '' },
+  { months: 1, discount: 0, label: 'Mensal', tag: '' },
+  { months: 6, discount: 0.05, label: 'Semestral', tag: '' },
   { months: 12, discount: 0.10, label: 'Anual', tag: 'Mais escolhido' },
   { months: 24, discount: 0.20, label: 'Bienal', tag: 'Melhor custo-benefício' },
 ];
