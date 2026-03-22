@@ -108,6 +108,109 @@ const contractOptions = [
   { months: 24, discount: 0.20, label: 'Bienal', tag: 'Melhor custo-benefício' },
 ];
 
+/* ── Industry-specific risk data ── */
+interface IndustryProfile {
+  label: string;
+  riskMultiplier: number;
+  topRisks: string[];
+  avgCondemnation: number;
+  fiscalizationRate: string;
+  commonNRs: string[];
+  insight: string;
+}
+
+const industryProfiles: Record<string, IndustryProfile> = {
+  industria: {
+    label: 'Indústria / Manufatura',
+    riskMultiplier: 1.4,
+    topRisks: ['LER/DORT por movimentos repetitivos', 'Exposição a ruído e agentes químicos', 'Acidentes com máquinas e equipamentos'],
+    avgCondemnation: 95000,
+    fiscalizationRate: '32% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-12', 'NR-15', 'NR-17', 'NR-1'],
+    insight: 'Indústrias representam o maior volume de condenações trabalhistas por doenças ocupacionais no Brasil.',
+  },
+  comercio: {
+    label: 'Comércio / Varejo',
+    riskMultiplier: 1.0,
+    topRisks: ['Sobrecarga postural em caixas e estoques', 'Jornadas extensas e banco de horas irregular', 'Assédio moral e metas abusivas'],
+    avgCondemnation: 45000,
+    fiscalizationRate: '18% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7'],
+    insight: 'O varejo lidera em ações por assédio moral e jornada irregular, com crescimento de 22% em 2024.',
+  },
+  saude: {
+    label: 'Saúde / Hospitalar',
+    riskMultiplier: 1.5,
+    topRisks: ['Exposição a agentes biológicos', 'Sobrecarga ergonômica em enfermagem', 'Burnout e riscos psicossociais'],
+    avgCondemnation: 120000,
+    fiscalizationRate: '15% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-32', 'NR-17', 'NR-7', 'NR-1'],
+    insight: 'Profissionais de saúde têm 3x mais afastamentos por transtornos mentais que a média nacional.',
+  },
+  construcao: {
+    label: 'Construção Civil',
+    riskMultiplier: 1.6,
+    topRisks: ['Quedas de altura e soterramento', 'Exposição solar e esforço físico extremo', 'Falta de EPI e treinamento'],
+    avgCondemnation: 150000,
+    fiscalizationRate: '25% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-18', 'NR-35', 'NR-6', 'NR-1'],
+    insight: 'Construção civil é o setor com maior taxa de mortalidade no trabalho e condenações mais altas.',
+  },
+  tecnologia: {
+    label: 'Tecnologia / Escritórios',
+    riskMultiplier: 0.9,
+    topRisks: ['LER/DORT por uso prolongado de computador', 'Burnout e sobrecarga mental', 'Problemas posturais e sedentarismo'],
+    avgCondemnation: 55000,
+    fiscalizationRate: '8% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7'],
+    insight: 'Ações por burnout em tech cresceram 40% desde 2022. A NR-1 agora exige gestão de riscos psicossociais.',
+  },
+  logistica: {
+    label: 'Logística / Transporte',
+    riskMultiplier: 1.3,
+    topRisks: ['Lombalgia por carga e descarga manual', 'Acidentes de trânsito e jornada excessiva', 'Vibração e exposição a ruído'],
+    avgCondemnation: 85000,
+    fiscalizationRate: '12% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-11', 'NR-17', 'NR-1', 'NR-7'],
+    insight: 'Motoristas e operadores de empilhadeira são os cargos com mais afastamentos por problemas na coluna.',
+  },
+  alimentacao: {
+    label: 'Alimentação / Restaurantes',
+    riskMultiplier: 1.1,
+    topRisks: ['Queimaduras e cortes', 'Jornada excessiva e banco de horas', 'Posturas inadequadas e calor excessivo'],
+    avgCondemnation: 35000,
+    fiscalizationRate: '10% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7', 'NR-24'],
+    insight: 'Restaurantes têm alta rotatividade e pouca documentação, facilitando condenações em fiscalizações.',
+  },
+  educacao: {
+    label: 'Educação',
+    riskMultiplier: 0.8,
+    topRisks: ['Disfonia e problemas vocais', 'Burnout e sobrecarga emocional', 'Problemas posturais'],
+    avgCondemnation: 40000,
+    fiscalizationRate: '5% das fiscalizações do MTE em 2024',
+    commonNRs: ['NR-17', 'NR-1', 'NR-7'],
+    insight: 'Professores são a segunda categoria com mais afastamentos por transtornos mentais no Brasil.',
+  },
+  outros: {
+    label: 'Outros',
+    riskMultiplier: 1.0,
+    topRisks: ['Riscos ergonômicos gerais', 'Falta de documentação SST', 'Riscos psicossociais não mapeados'],
+    avgCondemnation: 60000,
+    fiscalizationRate: 'Variável por segmento',
+    commonNRs: ['NR-1', 'NR-7', 'NR-17'],
+    insight: 'Toda empresa com CLT é obrigada a cumprir as NRs. A fiscalização tem aumentado em todos os setores.',
+  },
+};
+
+const companyTypes = [
+  { value: 'mei', label: 'MEI' },
+  { value: 'me', label: 'ME (Microempresa)' },
+  { value: 'epp', label: 'EPP (Empresa de Pequeno Porte)' },
+  { value: 'medio', label: 'Médio Porte' },
+  { value: 'grande', label: 'Grande Porte' },
+];
+
 /* ── Data ── */
 const painPoints = [
   { title: 'Risco invisível', text: 'Riscos ergonômicos e psicossociais que ninguém documenta. Até virar processo.' },
