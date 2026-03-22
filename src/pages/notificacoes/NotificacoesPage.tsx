@@ -37,7 +37,7 @@ const NotificacoesPage = () => {
         </div>
         {unreadCount > 0 && (
           <Button variant="outline" size="sm" className="rounded-full" onClick={() => markAllAsRead.mutate()}>
-            <CheckCheck className="h-4 w-4 mr-2" /> Marcar todas como lidas
+            Marcar todas como lidas
           </Button>
         )}
       </div>
