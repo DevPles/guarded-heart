@@ -479,14 +479,56 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                           Buscar
                         </button>
                       </div>
-                      {cnpjSearched && (
+                      {cnpjError && (
                         <motion.div
                           initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="mt-2 p-3 rounded-xl bg-teal-50 border border-teal-200 flex items-center gap-2"
+                          className="mt-2 p-3 rounded-xl bg-red-50 border border-red-200"
                         >
-                          <Building2 className="w-4 h-4 text-teal-600 shrink-0" />
-                          <p className="text-sm text-teal-800 font-medium">{companyName}</p>
+                          <p className="text-sm text-red-700">{cnpjError}</p>
+                        </motion.div>
+                      )}
+                      {cnpjSearched && cnpjData && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="mt-3 p-4 rounded-xl bg-teal-50 border border-teal-200"
+                        >
+                          <div className="flex items-center gap-2 mb-2">
+                            <Building2 className="w-4 h-4 text-teal-600 shrink-0" />
+                            <p className="text-sm font-bold text-teal-900">
+                              {cnpjData.nome_fantasia || cnpjData.razao_social}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                            <div>
+                              <span className="text-gray-400">Razão Social:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.razao_social}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">CNAE:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.cnae_fiscal_descricao}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Porte:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.porte}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Localização:</span>
+                              <p className="text-gray-700 font-medium">{cnpjData.municipio}/{cnpjData.uf}</p>
+                            </div>
+                            <div>
+                              <span className="text-gray-400">Situação:</span>
+                              <p className={`font-medium ${cnpjData.situacao_cadastral?.toLowerCase().includes('ativa') ? 'text-teal-700' : 'text-red-600'}`}>
+                                {cnpjData.situacao_cadastral}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="mt-2 pt-2 border-t border-teal-200/50">
+                            <p className="text-[11px] text-teal-700 italic">
+                              ✓ Porte e ramo de atuação preenchidos automaticamente com base no CNAE
+                            </p>
+                          </div>
                         </motion.div>
                       )}
                     </div>
