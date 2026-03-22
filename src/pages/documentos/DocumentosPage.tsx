@@ -27,7 +27,7 @@ const TIPO_DOC_OPTIONS = [
 const DocumentosPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [empresaFilter, setEmpresaFilter] = useState('');
+  const [empresaFilter, setEmpresaFilter] = useState('all');
   const [showNew, setShowNew] = useState(false);
 
   const [form, setForm] = useState({
