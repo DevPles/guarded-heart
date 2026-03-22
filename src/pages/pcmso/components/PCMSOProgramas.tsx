@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus } from 'lucide-react';
+
 
 interface Props {
   empresas: any[];
@@ -58,7 +58,7 @@ const PCMSOProgramas = ({ empresas, programas }: Props) => {
         <Dialog open={showNew} onOpenChange={setShowNew}>
           <DialogTrigger asChild>
             <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Plus className="h-4 w-4 mr-1" /> Novo Programa
+              Novo Programa
             </Button>
           </DialogTrigger>
           <DialogContent>

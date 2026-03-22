@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Plus, Search } from 'lucide-react';
+
 
 interface Props {
   empresas: any[];
@@ -78,9 +78,8 @@ const PCMSOEventos = ({ empresas, eventos, empresaFilter }: Props) => {
     <div className="space-y-4">
       {/* Filters bar */}
       <div className="flex flex-wrap gap-3 items-center">
-        <div className="relative flex-1 min-w-[200px] max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Buscar colaborador..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-9" />
+        <div className="flex-1 min-w-[200px] max-w-xs">
+          <Input placeholder="Buscar colaborador..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
         </div>
         <Select value={tipoFilter} onValueChange={setTipoFilter}>
           <SelectTrigger className="w-44"><SelectValue placeholder="Tipo" /></SelectTrigger>
@@ -102,7 +101,7 @@ const PCMSOEventos = ({ empresas, eventos, empresaFilter }: Props) => {
           <Dialog open={showNew} onOpenChange={setShowNew}>
             <DialogTrigger asChild>
               <Button className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Plus className="h-4 w-4 mr-1" /> Novo Exame
+                Novo Exame
               </Button>
             </DialogTrigger>
             <DialogContent>

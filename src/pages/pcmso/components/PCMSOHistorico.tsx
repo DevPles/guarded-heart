@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CheckCircle2, Clock, AlertTriangle, FileText, Calendar } from 'lucide-react';
+
 
 interface Props {
   eventos: any[];
@@ -16,13 +16,6 @@ const PCMSOHistorico = ({ eventos }: Props) => {
   const filtered = colaboradorFilter === 'all' ? eventos : eventos.filter(e => e.colaborador_id === colaboradorFilter);
   const sorted = [...filtered].sort((a, b) => new Date(b.data_prevista || b.created_at).getTime() - new Date(a.data_prevista || a.created_at).getTime());
 
-  const getIcon = (ev: any) => {
-    if (ev.data_realizada && ev.resultado === 'apto') return <CheckCircle2 className="h-4 w-4 text-green-600" />;
-    if (ev.data_realizada && ev.resultado === 'inapto') return <AlertTriangle className="h-4 w-4 text-red-600" />;
-    if (ev.data_realizada) return <FileText className="h-4 w-4 text-blue-600" />;
-    if (!ev.data_realizada && ev.data_prevista && new Date(ev.data_prevista) < new Date()) return <AlertTriangle className="h-4 w-4 text-red-600" />;
-    return <Clock className="h-4 w-4 text-amber-600" />;
-  };
 
   const tipoLabels: Record<string, string> = {
     admissional: 'Admissional', periodico: 'Periódico', retorno: 'Retorno ao Trabalho',
@@ -45,7 +38,6 @@ const PCMSOHistorico = ({ eventos }: Props) => {
       {sorted.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            <Calendar className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p>Nenhum registro encontrado para exibir o histórico.</p>
           </CardContent>
         </Card>
@@ -65,8 +57,7 @@ const PCMSOHistorico = ({ eventos }: Props) => {
                   <Card className={`flex-1 ${isVencido ? 'border-red-200 dark:border-red-900' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-2">
-                          {getIcon(ev)}
+                        <div>
                           <div>
                             <p className="font-medium text-sm">{ev.colaboradores?.nome_completo}</p>
                             <p className="text-xs text-muted-foreground">{ev.empresas?.razao_social}</p>

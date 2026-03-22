@@ -1,7 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { AlertTriangle, CheckCircle2, Clock, CalendarClock, Activity, FileCheck, Users, TrendingUp } from 'lucide-react';
 
 interface Props {
   eventos: any[];
@@ -24,10 +23,10 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
   const conformidade = eventos.length > 0 ? Math.round((realizados.length / eventos.length) * 100) : 100;
 
   const stats = [
-    { label: 'Exames Vencidos', value: vencidos.length, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-950/30', border: 'border-red-200 dark:border-red-900', urgent: vencidos.length > 0 },
-    { label: 'Próximos 30 dias', value: proximosVencer.length, icon: CalendarClock, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/30', border: 'border-amber-200 dark:border-amber-900', urgent: proximosVencer.length > 0 },
-    { label: 'Pendentes', value: pendentes.length, icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30', border: 'border-blue-200 dark:border-blue-900', urgent: false },
-    { label: 'Realizados', value: realizados.length, icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-200 dark:border-green-900', urgent: false },
+    { label: 'Exames Vencidos', value: vencidos.length, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-950/30', border: 'border-red-200 dark:border-red-900', urgent: vencidos.length > 0 },
+    { label: 'Próximos 30 dias', value: proximosVencer.length, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/30', border: 'border-amber-200 dark:border-amber-900', urgent: proximosVencer.length > 0 },
+    { label: 'Pendentes', value: pendentes.length, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30', border: 'border-blue-200 dark:border-blue-900', urgent: false },
+    { label: 'Realizados', value: realizados.length, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-200 dark:border-green-900', urgent: false },
   ];
 
   return (
@@ -40,12 +39,9 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
               <div className="absolute top-0 right-0 w-2 h-full bg-current opacity-40" style={{ color: s.color.replace('text-', '') }} />
             )}
             <CardContent className="p-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{s.label}</p>
-                  <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
-                </div>
-                <s.icon className={`h-5 w-5 ${s.color} opacity-70`} />
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{s.label}</p>
+                <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
               </div>
             </CardContent>
           </Card>
@@ -56,8 +52,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-1">
           <CardContent className="p-5 space-y-4">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
+            <div>
               <h3 className="font-semibold text-sm">Índice de Conformidade</h3>
             </div>
             <div className="flex items-center gap-4">
@@ -79,8 +74,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
 
         <Card className="lg:col-span-1">
           <CardContent className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-primary" />
+            <div>
               <h3 className="font-semibold text-sm">Resultados Clínicos</h3>
             </div>
             <div className="space-y-2">
@@ -104,14 +98,12 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
 
         <Card className="lg:col-span-1">
           <CardContent className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <FileCheck className="h-4 w-4 text-primary" />
+            <div>
               <h3 className="font-semibold text-sm">Programas Ativos</h3>
             </div>
             <p className="text-3xl font-bold text-primary">{programasAtivos.length}</p>
             <p className="text-xs text-muted-foreground">{programas.length} total registrados</p>
-            <div className="flex items-center gap-2 mt-2">
-              <Users className="h-3.5 w-3.5 text-muted-foreground" />
+            <div className="mt-2">
               <span className="text-xs text-muted-foreground">
                 {new Set(eventos.map(e => e.colaborador_id)).size} colaboradores acompanhados
               </span>
@@ -124,8 +116,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
       {vencidos.length > 0 && (
         <Card className="border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-950/20">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <AlertTriangle className="h-4 w-4 text-red-600" />
+            <div className="mb-3">
               <h3 className="font-semibold text-sm text-red-700 dark:text-red-400">Exames Vencidos — Ação Imediata</h3>
             </div>
             <div className="space-y-2">
@@ -151,8 +142,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
       {proximosVencer.length > 0 && (
         <Card className="border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/20">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <CalendarClock className="h-4 w-4 text-amber-600" />
+            <div className="mb-3">
               <h3 className="font-semibold text-sm text-amber-700 dark:text-amber-400">Vencendo nos próximos 30 dias</h3>
             </div>
             <div className="space-y-2">
