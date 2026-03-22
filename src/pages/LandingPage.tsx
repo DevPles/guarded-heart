@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { X, Check, Shield, FileCheck, HeartPulse, Brain, ClipboardList, BarChart3, Bell, Users, Building2, ChevronRight } from 'lucide-react';
 import logoErgon from '@/assets/logo-ergon.png';
 import heroImg1 from '@/assets/landing-hero-1.jpg';
 import heroImg2 from '@/assets/landing-hero-2.jpg';
 import heroImg3 from '@/assets/landing-hero-3.jpg';
 
-/* ── Animated text block that moves on scroll ── */
+/* ── Animated text block ── */
 function ScrollText({
   children,
   className = '',
@@ -20,27 +21,6 @@ function ScrollText({
 }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-120px' });
-
-  const variants: Record<string, { hidden: object; visible: object }> = {
-    up: {
-      hidden: { opacity: 0, y: 80 },
-      visible: { opacity: 1, y: 0 },
-    },
-    left: {
-      hidden: { opacity: 0, x: -80 },
-      visible: { opacity: 1, x: 0 },
-    },
-    right: {
-      hidden: { opacity: 0, x: 80 },
-      visible: { opacity: 1, x: 0 },
-    },
-    scale: {
-      hidden: { opacity: 0, scale: 0.85 },
-      visible: { opacity: 1, scale: 1 },
-    },
-  };
-
-  const v = variants[direction];
 
   return (
     <motion.div
@@ -58,7 +38,7 @@ function ScrollText({
   );
 }
 
-/* ── Parallax image background ── */
+/* ── Parallax background ── */
 function ParallaxBg({ src, speed = 0.3, overlay }: { src: string; speed?: number; overlay: string }) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
@@ -71,6 +51,47 @@ function ParallaxBg({ src, speed = 0.3, overlay }: { src: string; speed?: number
     </div>
   );
 }
+
+/* ══════════════════════════════════════════════════════════════
+   QUOTE SIMULATOR DATA
+   Base prices are internal — user never sees them.
+   Display prices = base * 1.20 (20% margin)
+══════════════════════════════════════════════════════════════ */
+const MARKUP = 1.20;
+
+interface ServiceOption {
+  id: string;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  basePrice: number;
+  category: 'essential' | 'advanced' | 'premium';
+}
+
+const services: ServiceOption[] = [
+  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', icon: <ClipboardList className="w-5 h-5" />, basePrice: 800, category: 'essential' },
+  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', icon: <FileCheck className="w-5 h-5" />, basePrice: 1500, category: 'essential' },
+  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', icon: <HeartPulse className="w-5 h-5" />, basePrice: 1200, category: 'essential' },
+  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', icon: <Brain className="w-5 h-5" />, basePrice: 2000, category: 'advanced' },
+  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', icon: <BarChart3 className="w-5 h-5" />, basePrice: 900, category: 'advanced' },
+  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', icon: <Bell className="w-5 h-5" />, basePrice: 600, category: 'advanced' },
+  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', icon: <Shield className="w-5 h-5" />, basePrice: 1100, category: 'premium' },
+  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', icon: <Building2 className="w-5 h-5" />, basePrice: 1800, category: 'premium' },
+  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', icon: <Users className="w-5 h-5" />, basePrice: 1500, category: 'premium' },
+];
+
+const categoryLabels: Record<string, { label: string; color: string }> = {
+  essential: { label: 'Proteção Essencial', color: 'text-teal-600 bg-teal-50 border-teal-200' },
+  advanced: { label: 'Monitoramento Avançado', color: 'text-blue-600 bg-blue-50 border-blue-200' },
+  premium: { label: 'Cobertura Total', color: 'text-violet-600 bg-violet-50 border-violet-200' },
+};
+
+const protectionBenefits = [
+  'Proteção contra autuações do MTE e fiscalizações',
+  'Redução de passivos trabalhistas com evidência contínua',
+  'Conformidade total com NR-1, NR-7 e NR-17',
+  'Rastreabilidade completa para auditorias e perícias',
+];
 
 /* ── Data ── */
 const painPoints = [
@@ -86,30 +107,348 @@ const solutionSteps = [
   { num: '04', title: 'Ação e prevenção', text: 'Planos de ação automáticos, alertas inteligentes, reavaliação programada.' },
 ];
 
-const plans = [
-  {
-    name: 'ESSENCIAL', description: 'Organização da saúde ocupacional',
-    features: ['Controle inicial de dados e registros', 'Cadastro de empresas e colaboradores', 'Avaliações AEP básicas', 'Relatórios padrão'],
-    highlight: false,
-  },
-  {
-    name: 'PROFISSIONAL', description: 'Gestão de risco e monitoramento contínuo',
-    features: ['Tudo do Essencial', 'AET, ARP e checklists completos', 'Indicadores e dashboard', 'Alertas automáticos', 'Planos de ação integrados'],
-    highlight: true,
-  },
-  {
-    name: 'ENTERPRISE', description: 'Proteção jurídica completa',
-    features: ['Tudo do Profissional', 'Evidência contínua e rastreabilidade total', 'Gestão estratégica da saúde ocupacional', 'PCMSO integrado', 'Suporte prioritário e personalização'],
-    highlight: false,
-  },
-];
+/* ══════════════════════════════════════════════════════════════
+   QUOTE MODAL
+══════════════════════════════════════════════════════════════ */
+function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [step, setStep] = useState(1);
+  const [colaboradores, setColaboradores] = useState(50);
+  const [selected, setSelected] = useState<Set<string>>(new Set(['aep', 'pcmso']));
+  const [contactForm, setContactForm] = useState({ nome: '', empresa: '', email: '', telefone: '' });
+  const [submitted, setSubmitted] = useState(false);
 
-const planFromSlider = (v: number) => {
-  if (v <= 50) return 'ESSENCIAL';
-  if (v <= 200) return 'PROFISSIONAL';
-  return 'ENTERPRISE';
-};
+  const toggle = (id: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
+  const selectedServices = services.filter(s => selected.has(s.id));
+  const baseTotal = selectedServices.reduce((sum, s) => sum + s.basePrice, 0);
+  const perEmployee = colaboradores > 0 ? (baseTotal * MARKUP) / colaboradores : 0;
+  const displayTotal = Math.ceil(baseTotal * MARKUP);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  const reset = () => {
+    setStep(1);
+    setSubmitted(false);
+    setSelected(new Set(['aep', 'pcmso']));
+    setContactForm({ nome: '', empresa: '', email: '', telefone: '' });
+    setColaboradores(50);
+    onClose();
+  };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={reset}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+          />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="relative w-full max-w-3xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-8 py-5 border-b border-gray-100 bg-gradient-to-r from-teal-50 to-blue-50">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  {step === 1 && 'Monte seu plano de proteção'}
+                  {step === 2 && 'Resumo do seu orçamento'}
+                  {step === 3 && 'Solicitar proposta'}
+                </h2>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {step === 1 && 'Selecione os serviços que sua empresa precisa'}
+                  {step === 2 && 'Revise os serviços e vantagens inclusos'}
+                  {step === 3 && 'Preencha seus dados para receber a proposta'}
+                </p>
+              </div>
+              <button onClick={reset} className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+
+            {/* Steps indicator */}
+            <div className="px-8 py-3 flex items-center gap-2 bg-gray-50/50">
+              {[1, 2, 3].map(s => (
+                <div key={s} className="flex items-center gap-2">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+                    step >= s
+                      ? 'bg-gradient-to-br from-teal-500 to-blue-600 text-white shadow-md shadow-teal-500/20'
+                      : 'bg-gray-200 text-gray-400'
+                  }`}>
+                    {step > s ? <Check className="w-4 h-4" /> : s}
+                  </div>
+                  {s < 3 && <div className={`w-12 h-0.5 rounded-full transition-all duration-300 ${step > s ? 'bg-teal-400' : 'bg-gray-200'}`} />}
+                </div>
+              ))}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto px-8 py-6">
+              <AnimatePresence mode="wait">
+                {step === 1 && (
+                  <motion.div
+                    key="step1"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="mb-8 p-5 rounded-2xl bg-gray-50 border border-gray-100">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-medium text-gray-700">Nº de colaboradores</span>
+                        <span className="text-2xl font-bold text-teal-600" style={{ fontFamily: "'Space Grotesk'" }}>
+                          {colaboradores}
+                        </span>
+                      </div>
+                      <input
+                        type="range" min={1} max={500} value={colaboradores}
+                        onChange={e => setColaboradores(Number(e.target.value))}
+                        className="w-full h-2 rounded-full appearance-none bg-gray-200 accent-teal-500 cursor-pointer"
+                      />
+                      <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+                        <span>1</span><span>100</span><span>250</span><span>500</span>
+                      </div>
+                    </div>
+
+                    {(['essential', 'advanced', 'premium'] as const).map(cat => (
+                      <div key={cat} className="mb-6">
+                        <span className={`inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider border mb-3 ${categoryLabels[cat].color}`}>
+                          {categoryLabels[cat].label}
+                        </span>
+                        <div className="space-y-2">
+                          {services.filter(s => s.category === cat).map(service => {
+                            const isSelected = selected.has(service.id);
+                            return (
+                              <button
+                                key={service.id}
+                                onClick={() => toggle(service.id)}
+                                className={`w-full flex items-start gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                                  isSelected
+                                    ? 'border-teal-400 bg-teal-50/50 shadow-sm'
+                                    : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50/50'
+                                }`}
+                              >
+                                <div className={`mt-0.5 w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                                  isSelected ? 'bg-teal-500 text-white' : 'bg-gray-100 text-gray-400'
+                                }`}>
+                                  {service.icon}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className={`text-sm font-semibold ${isSelected ? 'text-teal-800' : 'text-gray-700'}`}>
+                                    {service.label}
+                                  </p>
+                                  <p className="text-xs text-gray-400 mt-0.5">{service.description}</p>
+                                </div>
+                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 mt-1 transition-all ${
+                                  isSelected ? 'border-teal-500 bg-teal-500' : 'border-gray-300'
+                                }`}>
+                                  {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+
+                {step === 2 && (
+                  <motion.div
+                    key="step2"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="mb-6">
+                      <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">Serviços inclusos</h3>
+                      <div className="space-y-3">
+                        {selectedServices.map(s => (
+                          <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-teal-50/50 border border-teal-100">
+                            <div className="w-9 h-9 rounded-lg bg-teal-500 text-white flex items-center justify-center shrink-0">
+                              {s.icon}
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-semibold text-gray-800">{s.label}</p>
+                              <p className="text-xs text-gray-400">{s.description}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-teal-50 to-blue-50 border border-teal-100">
+                      <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-teal-600" />
+                        Sua empresa terá
+                      </h3>
+                      <ul className="space-y-2.5">
+                        {protectionBenefits.map(b => (
+                          <li key={b} className="flex items-start gap-3 text-sm text-gray-700">
+                            <Check className="w-4 h-4 text-teal-500 mt-0.5 shrink-0" />
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="p-5 rounded-2xl bg-gray-900 text-white">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm text-white/60">{colaboradores} colaboradores</span>
+                        <span className="text-sm text-white/60">{selectedServices.length} serviços</span>
+                      </div>
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <p className="text-xs text-white/40 uppercase tracking-wider">Investimento mensal estimado</p>
+                          <p className="text-3xl font-bold mt-1" style={{ fontFamily: "'Space Grotesk'" }}>
+                            R$ {displayTotal.toLocaleString('pt-BR')}
+                            <span className="text-sm font-normal text-white/50">/mês</span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs text-white/40">Por colaborador</p>
+                          <p className="text-lg font-semibold text-teal-400" style={{ fontFamily: "'Space Grotesk'" }}>
+                            R$ {perEmployee.toFixed(2).replace('.', ',')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div
+                    key="step3"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {submitted ? (
+                      <div className="text-center py-16">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                          className="w-20 h-20 rounded-full bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center mx-auto mb-6 shadow-xl shadow-teal-500/30"
+                        >
+                          <Check className="w-10 h-10 text-white" />
+                        </motion.div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Space Grotesk'" }}>
+                          Proposta solicitada!
+                        </h3>
+                        <p className="text-gray-500 mb-8">
+                          Nossa equipe entrará em contato em até 24h com sua proposta personalizada.
+                        </p>
+                        <button onClick={reset} className="px-8 py-3 rounded-full bg-gradient-to-r from-teal-500 to-blue-600 text-white font-semibold hover:from-teal-400 hover:to-blue-500 transition-all shadow-lg">
+                          Fechar
+                        </button>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSubmit} className="space-y-5">
+                        <p className="text-sm text-gray-500 mb-4">
+                          Preencha seus dados e receba uma proposta personalizada com os {selectedServices.length} serviços selecionados para {colaboradores} colaboradores.
+                        </p>
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Seu nome *</label>
+                            <input type="text" required value={contactForm.nome} onChange={e => setContactForm(f => ({ ...f, nome: e.target.value }))}
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="João Silva" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Empresa *</label>
+                            <input type="text" required value={contactForm.empresa} onChange={e => setContactForm(f => ({ ...f, empresa: e.target.value }))}
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="Nome da empresa" />
+                          </div>
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1.5">E-mail *</label>
+                            <input type="email" required value={contactForm.email} onChange={e => setContactForm(f => ({ ...f, email: e.target.value }))}
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="email@empresa.com" />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Telefone</label>
+                            <input type="tel" value={contactForm.telefone} onChange={e => setContactForm(f => ({ ...f, telefone: e.target.value }))}
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all" placeholder="(11) 99999-9999" />
+                          </div>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-between">
+                          <div>
+                            <p className="text-xs text-gray-400">Investimento estimado</p>
+                            <p className="text-lg font-bold text-gray-900" style={{ fontFamily: "'Space Grotesk'" }}>
+                              R$ {displayTotal.toLocaleString('pt-BR')}/mês
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs text-gray-400">{selectedServices.length} serviços</p>
+                            <p className="text-xs text-gray-400">{colaboradores} colaboradores</p>
+                          </div>
+                        </div>
+
+                        <button type="submit" className="w-full py-4 rounded-full text-base font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-500 shadow-xl shadow-teal-500/20">
+                          Solicitar proposta personalizada
+                        </button>
+                      </form>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Footer actions */}
+            {!submitted && (
+              <div className="px-8 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
+                {step > 1 ? (
+                  <button onClick={() => setStep(s => s - 1)} className="text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors">
+                    ← Voltar
+                  </button>
+                ) : <div />}
+                {step < 3 && (
+                  <button
+                    onClick={() => setStep(s => s + 1)}
+                    disabled={selected.size === 0}
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all shadow-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    Continuar <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LANDING PAGE
+══════════════════════════════════════════════════════════════ */
 const LandingPage = () => {
   const navigate = useNavigate();
   const heroRef = useRef<HTMLDivElement>(null);
@@ -118,8 +457,7 @@ const LandingPage = () => {
   const heroScale = useTransform(heroScroll, [0, 1], [1, 1.15]);
   const heroOpacity = useTransform(heroScroll, [0, 0.7], [1, 0]);
 
-  const [colaboradores, setColaboradores] = useState(50);
-  const recommendedPlan = planFromSlider(colaboradores);
+  const [quoteOpen, setQuoteOpen] = useState(false);
 
   const [form, setForm] = useState({ nome: '', empresa: '', email: '', telefone: '', mensagem: '' });
   const [sent, setSent] = useState(false);
@@ -132,6 +470,8 @@ const LandingPage = () => {
   return (
     <div className="bg-white text-gray-900 overflow-x-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
 
+      <QuoteModal open={quoteOpen} onClose={() => setQuoteOpen(false)} />
+
       {/* ── NAV ── */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
@@ -142,18 +482,24 @@ const LandingPage = () => {
             <a href="#planos" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Planos</a>
             <a href="#contato" className="text-sm text-gray-600 hover:text-teal-600 transition-colors">Contato</a>
           </div>
-          <button
-            onClick={() => navigate('/login')}
-            className="px-6 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-300 shadow-lg shadow-teal-500/20"
-          >
-            Acessar plataforma
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setQuoteOpen(true)}
+              className="px-5 py-2.5 rounded-full text-sm font-semibold border-2 border-teal-500 text-teal-600 hover:bg-teal-50 transition-all duration-300"
+            >
+              Simular orçamento
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="px-6 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-300 shadow-lg shadow-teal-500/20"
+            >
+              Acessar plataforma
+            </button>
+          </div>
         </div>
       </nav>
 
-      {/* ══════════════════════════════════════════════════════════════
-         HERO
-      ══════════════════════════════════════════════════════════════ */}
+      {/* HERO */}
       <div ref={heroRef} className="relative min-h-[110vh] flex items-center overflow-hidden">
         <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0">
           <img src={heroImg1} alt="" className="w-full h-full object-cover" />
@@ -169,10 +515,7 @@ const LandingPage = () => {
             </ScrollText>
 
             <ScrollText direction="up" delay={0.3}>
-              <h1
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-gray-900 mb-6"
-                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-              >
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-gray-900 mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                 Você não precisa de mais um sistema.
                 <br />
                 <span className="bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent">
@@ -189,12 +532,12 @@ const LandingPage = () => {
 
             <ScrollText direction="up" delay={0.7}>
               <div className="flex flex-wrap gap-4">
-                <a
-                  href="#contato"
+                <button
+                  onClick={() => setQuoteOpen(true)}
                   className="px-8 py-4 rounded-full text-base font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-500 shadow-xl shadow-teal-500/25"
                 >
-                  Solicitar demonstração
-                </a>
+                  Simular orçamento
+                </button>
                 <a
                   href="#solucao"
                   className="px-8 py-4 rounded-full text-base font-semibold border-2 border-gray-200 text-gray-700 hover:border-teal-300 hover:text-teal-700 transition-all duration-300"
@@ -215,9 +558,7 @@ const LandingPage = () => {
         </motion.div>
       </div>
 
-      {/* ══════════════════════════════════════════════════════════════
-         PROBLEMA — texto flutuante sem cards
-      ══════════════════════════════════════════════════════════════ */}
+      {/* PROBLEMA */}
       <section id="problema" className="py-32 px-6 bg-gray-50">
         <div className="max-w-5xl mx-auto">
           <ScrollText direction="up">
@@ -225,25 +566,16 @@ const LandingPage = () => {
           </ScrollText>
           <ScrollText direction="up" delay={0.1}>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 mb-24 leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-              O que acontece quando
-              <br />
-              não há evidências?
+              O que acontece quando<br />não há evidências?
             </h2>
           </ScrollText>
 
           <div className="space-y-32">
             {painPoints.map((item, i) => (
-              <ScrollText
-                key={item.title}
-                direction={i % 2 === 0 ? 'left' : 'right'}
-                delay={0.1}
-              >
+              <ScrollText key={item.title} direction={i % 2 === 0 ? 'left' : 'right'} delay={0.1}>
                 <div className={`max-w-xl ${i % 2 !== 0 ? 'ml-auto text-right' : ''}`}>
                   <div className={`w-16 h-1 rounded-full bg-red-400 mb-6 ${i % 2 !== 0 ? 'ml-auto' : ''}`} />
-                  <h3
-                    className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4"
-                    style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                  >
+                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                     {item.title}
                   </h3>
                   <p className="text-lg text-gray-500 leading-relaxed">{item.text}</p>
@@ -254,19 +586,14 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════
-         SOLUÇÃO — textos que deslizam sobre imagem parallax
-      ══════════════════════════════════════════════════════════════ */}
+      {/* SOLUÇÃO */}
       <section id="solucao" className="relative py-40 overflow-hidden">
         <ParallaxBg src={heroImg2} speed={0.2} overlay="bg-gradient-to-b from-[#0c1829]/90 to-[#0c1829]/95" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6">
           <ScrollText direction="scale">
             <p className="text-xs uppercase tracking-widest text-teal-400 font-semibold text-center mb-4">Como funciona</p>
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white mb-6 leading-tight"
-              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-            >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-white mb-6 leading-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               Controle, monitoramento e evidência
             </h2>
             <p className="text-center text-xl font-semibold bg-gradient-to-r from-teal-400 to-blue-400 bg-clip-text text-transparent mb-32" style={{ fontFamily: "'Space Grotesk'" }}>
@@ -275,26 +602,16 @@ const LandingPage = () => {
           </ScrollText>
 
           <div className="space-y-40">
-            {solutionSteps.map((step, i) => (
-              <ScrollText
-                key={step.num}
-                direction={i % 2 === 0 ? 'left' : 'right'}
-                delay={0.05}
-              >
+            {solutionSteps.map((s, i) => (
+              <ScrollText key={s.num} direction={i % 2 === 0 ? 'left' : 'right'} delay={0.05}>
                 <div className={`max-w-lg ${i % 2 !== 0 ? 'ml-auto text-right' : ''}`}>
-                  <span
-                    className="text-6xl sm:text-7xl font-bold text-teal-400/15 block mb-2"
-                    style={{ fontFamily: "'Space Grotesk'" }}
-                  >
-                    {step.num}
+                  <span className="text-6xl sm:text-7xl font-bold text-teal-400/15 block mb-2" style={{ fontFamily: "'Space Grotesk'" }}>
+                    {s.num}
                   </span>
-                  <h3
-                    className="text-2xl sm:text-3xl font-bold text-white mb-4"
-                    style={{ fontFamily: "'Space Grotesk'" }}
-                  >
-                    {step.title}
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4" style={{ fontFamily: "'Space Grotesk'" }}>
+                    {s.title}
                   </h3>
-                  <p className="text-base text-white/50 leading-relaxed">{step.text}</p>
+                  <p className="text-base text-white/50 leading-relaxed">{s.text}</p>
                 </div>
               </ScrollText>
             ))}
@@ -302,90 +619,49 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════
-         PLANOS + SIMULADOR
-      ══════════════════════════════════════════════════════════════ */}
+      {/* PLANOS — CTA para abrir simulador */}
       <section id="planos" className="py-32 px-6 bg-white">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto text-center">
           <ScrollText direction="up">
-            <p className="text-xs uppercase tracking-widest text-teal-600 font-semibold text-center mb-3">Planos</p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-gray-900 leading-tight mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+            <p className="text-xs uppercase tracking-widest text-teal-600 font-semibold mb-3">Planos</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
               Mais que gestão.
             </h2>
-            <p className="text-center text-2xl sm:text-3xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-6" style={{ fontFamily: "'Space Grotesk'" }}>
+            <p className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent mb-8" style={{ fontFamily: "'Space Grotesk'" }}>
               Proteção real.
             </p>
           </ScrollText>
 
-          {/* Simulator */}
-          <ScrollText direction="scale" delay={0.2}>
-            <div className="max-w-xl mx-auto mb-20 p-8 rounded-2xl bg-gray-50 border border-gray-100 shadow-sm">
-              <h3 className="text-lg font-bold text-gray-900 mb-2 text-center" style={{ fontFamily: "'Space Grotesk'" }}>
-                Simulador de plano
-              </h3>
-              <p className="text-sm text-gray-500 text-center mb-6">Quantos colaboradores sua empresa possui?</p>
-              <div className="flex items-center gap-4 mb-4">
-                <input
-                  type="range" min={1} max={500} value={colaboradores}
-                  onChange={e => setColaboradores(Number(e.target.value))}
-                  className="flex-1 h-2 rounded-full appearance-none bg-gray-200 accent-teal-500 cursor-pointer"
-                />
-                <span className="text-2xl font-bold text-teal-600 min-w-[4rem] text-right" style={{ fontFamily: "'Space Grotesk'" }}>
-                  {colaboradores}
-                </span>
-              </div>
-              <p className="text-center text-sm text-gray-500">
-                Plano recomendado:{' '}
-                <span className="font-bold text-teal-700">{recommendedPlan}</span>
-              </p>
-            </div>
+          <ScrollText direction="up" delay={0.15}>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+              Monte um plano sob medida para sua empresa. Escolha os serviços que precisa e veja instantaneamente o investimento necessário para proteger seus colaboradores e seu negócio.
+            </p>
           </ScrollText>
 
-          {/* Plans as flowing text blocks, not cards */}
-          <div className="space-y-16 max-w-3xl mx-auto">
-            {plans.map((plan, i) => (
-              <ScrollText key={plan.name} direction={i % 2 === 0 ? 'left' : 'right'} delay={0.1}>
-                <div className={`flex flex-col ${i % 2 !== 0 ? 'items-end text-right' : ''}`}>
-                  {plan.highlight && (
-                    <span className="inline-block px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold bg-gradient-to-r from-teal-500 to-blue-600 text-white mb-3 w-fit">
-                      Recomendado
-                    </span>
-                  )}
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: "'Space Grotesk'" }}>
-                    {plan.name}
-                  </h3>
-                  <p className="text-base text-gray-500 mb-4">{plan.description}</p>
-                  <ul className={`space-y-2 mb-6 ${i % 2 !== 0 ? 'text-right' : ''}`}>
-                    {plan.features.map(f => (
-                      <li key={f} className={`text-sm text-gray-600 flex items-center gap-3 ${i % 2 !== 0 ? 'flex-row-reverse' : ''}`}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-teal-500 shrink-0" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                  <a
-                    href="#contato"
-                    className={`inline-block px-8 py-3 rounded-full text-sm font-semibold transition-all duration-300 w-fit ${
-                      plan.highlight
-                        ? 'bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-lg shadow-teal-500/20'
-                        : 'bg-gray-100 text-gray-700 hover:bg-teal-50 hover:text-teal-700 border border-gray-200'
-                    }`}
-                  >
-                    Solicitar demonstração
-                  </a>
-                  {i < plans.length - 1 && (
-                    <div className={`mt-16 w-24 h-px bg-gray-200 ${i % 2 !== 0 ? 'ml-auto' : ''}`} />
-                  )}
+          <ScrollText direction="scale" delay={0.3}>
+            <button
+              onClick={() => setQuoteOpen(true)}
+              className="inline-flex items-center gap-3 px-10 py-5 rounded-full text-lg font-bold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-500 shadow-2xl shadow-teal-500/25 hover:shadow-teal-500/40 hover:scale-105"
+            >
+              <BarChart3 className="w-6 h-6" />
+              Montar meu plano de proteção
+            </button>
+          </ScrollText>
+
+          <ScrollText direction="up" delay={0.4}>
+            <div className="flex flex-wrap justify-center gap-6 mt-16">
+              {['NR-1 Compliant', 'NR-7 Integrado', 'NR-17 Documentado', 'Dados Criptografados'].map(badge => (
+                <div key={badge} className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-50 border border-gray-100">
+                  <Shield className="w-4 h-4 text-teal-500" />
+                  <span className="text-xs font-medium text-gray-600">{badge}</span>
                 </div>
-              </ScrollText>
-            ))}
-          </div>
+              ))}
+            </div>
+          </ScrollText>
         </div>
       </section>
 
-      {/* ══════════════════════════════════════════════════════════════
-         CONTATO
-      ══════════════════════════════════════════════════════════════ */}
+      {/* CONTATO */}
       <section id="contato" className="relative py-32 overflow-hidden">
         <ParallaxBg src={heroImg3} speed={0.15} overlay="bg-gradient-to-b from-[#0c1829]/90 to-[#0c1829]/95" />
 
@@ -394,10 +670,7 @@ const LandingPage = () => {
             <div>
               <ScrollText direction="left">
                 <p className="text-xs uppercase tracking-widest text-teal-400 font-semibold mb-4">Contato</p>
-                <h2
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6"
-                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-                >
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
                   Pare de apenas fazer.
                 </h2>
               </ScrollText>
@@ -449,7 +722,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {/* Footer */}
       <footer className="bg-gray-900 py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
           <img src={logoErgon} alt="Ergon" className="h-8 brightness-0 invert opacity-60" />
