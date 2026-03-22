@@ -9,9 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const priorityConfig = {
-  info: { icon: Info, label: 'Informativo', className: 'text-blue-500', badgeClass: 'bg-blue-100 text-blue-700' },
-  warning: { icon: AlertTriangle, label: 'Atenção', className: 'text-amber-500', badgeClass: 'bg-amber-100 text-amber-700' },
-  critical: { icon: AlertCircle, label: 'Crítico', className: 'text-destructive', badgeClass: 'bg-red-100 text-red-700' },
+  info: { label: 'Informativo', badgeClass: 'bg-blue-100 text-blue-700' },
+  warning: { label: 'Atenção', badgeClass: 'bg-amber-100 text-amber-700' },
+  critical: { label: 'Crítico', badgeClass: 'bg-red-100 text-red-700' },
 };
 
 const statusLabels = { pending: 'Pendente', viewed: 'Lida', resolved: 'Resolvida' };
