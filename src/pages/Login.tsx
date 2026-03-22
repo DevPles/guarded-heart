@@ -157,11 +157,17 @@ const Login = () => {
 
               {!isSignUp ? (
                 <div className="animate-fade-in">
-                  <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
+                  <h2 className="text-2xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
                     O 1º ecossistema completo de Saúde Ocupacional com evidências
                   </h2>
-                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-6">
-                    AEP, AET, riscos psicossociais, PCMSO, atestados, checklists e monitoramento contínuo — tudo integrado em uma única plataforma baseada em dados.
+                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-3">
+                    Coleta estruturada. Análise inteligente de risco.
+                  </p>
+                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-3">
+                    Monitoramento contínuo. Rastreabilidade total.
+                  </p>
+                  <p className="text-white/60 text-xs leading-relaxed max-w-xs mx-auto mb-8">
+                    AEP, AET, riscos psicossociais, PCMSO, atestados, checklists e planos de ação em uma única plataforma.
                   </p>
                   <Button
                     variant="outline"
@@ -173,11 +179,14 @@ const Login = () => {
                 </div>
               ) : (
                 <div className="animate-fade-in">
-                  <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
-                    O 1º ecossistema completo de Saúde Ocupacional com evidências
+                  <h2 className="text-2xl font-bold text-white mb-4 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
+                    Proteção jurídica real começa com evidências reais
                   </h2>
-                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-6">
-                    Gerencie ergonomia, saúde e segurança do trabalho com rastreabilidade total e decisões baseadas em dados reais.
+                  <p className="text-white/80 text-sm leading-relaxed max-w-xs mx-auto mb-3">
+                    Documentação auditável. Decisões baseadas em dados.
+                  </p>
+                  <p className="text-white/60 text-xs leading-relaxed max-w-xs mx-auto mb-8">
+                    Gerencie ergonomia, saúde e segurança do trabalho com controle total sobre cada registro.
                   </p>
                   <Button
                     variant="outline"
