@@ -68,13 +68,11 @@ const NotificacoesPage = () => {
           <Card><CardContent className="p-8 text-center text-muted-foreground">Nenhuma notificação encontrada</CardContent></Card>
         ) : filtered.map(n => {
           const config = priorityConfig[n.priority];
-          const Icon = config.icon;
           const isPending = n.status === 'pending';
 
           return (
             <Card key={n.id} className={cn(isPending && 'border-l-4', isPending && n.priority === 'critical' && 'border-l-destructive', isPending && n.priority === 'warning' && 'border-l-amber-500', isPending && n.priority === 'info' && 'border-l-blue-500')}>
               <CardContent className="p-4 flex items-start gap-4">
-                <Icon className={cn('h-5 w-5 mt-1 shrink-0', config.className)} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <p className={cn('text-sm', isPending ? 'font-semibold' : 'text-muted-foreground')}>{n.title}</p>
