@@ -19,6 +19,11 @@ const TopNav = () => {
   const roleLabel = primaryRole ? ROLE_LABELS[primaryRole] : '';
   const homeRoute = primaryRole === 'colaborador' ? '/meu-painel' : '/home';
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/', { replace: true });
+  };
+
   return (
     <header className="border-b bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,7 +52,7 @@ const TopNav = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={signOut}
+              onClick={handleSignOut}
               className="rounded-full shadow-[0_4px_14px_0_hsl(var(--border)/0.4)] hover:scale-105 hover:-translate-y-0.5 transition-all duration-200"
             >
               Sair
