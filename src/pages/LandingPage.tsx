@@ -6,6 +6,10 @@ import logoErgon from '@/assets/logo-ergon.png';
 import heroImg1 from '@/assets/landing-hero-1.jpg';
 import heroImg2 from '@/assets/landing-hero-2.jpg';
 import heroImg3 from '@/assets/landing-hero-3.jpg';
+import teamPericles from '@/assets/team-pericles.jpg';
+import teamRayssa from '@/assets/team-rayssa.jpg';
+import teamKaren from '@/assets/team-karen.jpg';
+import teamRodrigo from '@/assets/team-rodrigo.jpg';
 
 /* ── Animated text block ── */
 function ScrollText({
