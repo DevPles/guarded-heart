@@ -2,6 +2,7 @@ import { useAuth, AppRole } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import logoIcon from '@/assets/logo-ergon-icon.png';
+import NotificationBell from '@/components/NotificationBell';
 
 const ROLE_LABELS: Record<AppRole, string> = {
   admin_master: 'Admin Master',
