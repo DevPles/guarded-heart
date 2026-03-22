@@ -80,12 +80,6 @@ const navCards: NavCard[] = [
     allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor'],
   },
   {
-    title: 'Notificações',
-    description: 'Central de alertas, vencimentos e pendências',
-    path: '/notificacoes',
-    allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor', 'colaborador'],
-  },
-  {
     title: 'Dashboard',
     description: 'Indicadores, gráficos e visão gerencial',
     path: '/dashboard',
