@@ -103,8 +103,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
             </div>
             <p className="text-3xl font-bold text-primary">{programasAtivos.length}</p>
             <p className="text-xs text-muted-foreground">{programas.length} total registrados</p>
-            <div className="flex items-center gap-2 mt-2">
-              <Users className="h-3.5 w-3.5 text-muted-foreground" />
+            <div className="mt-2">
               <span className="text-xs text-muted-foreground">
                 {new Set(eventos.map(e => e.colaborador_id)).size} colaboradores acompanhados
               </span>
