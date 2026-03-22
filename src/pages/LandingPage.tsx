@@ -784,10 +784,10 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                   </motion.div>
                 )}
 
-                {/* STEP 3 — Contact form + final summary */}
-                {step === 3 && (
+                {/* STEP 4 — Contact form + final summary */}
+                {step === 4 && (
                   <motion.div
-                    key="step3"
+                    key="step4"
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -30 }}
