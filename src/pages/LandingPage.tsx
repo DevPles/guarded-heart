@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { X, Check, ChevronRight } from 'lucide-react';
+import { X, Check, ChevronRight, Search, Building2, AlertTriangle } from 'lucide-react';
 import logoErgon from '@/assets/logo-ergon.png';
 import heroImg1 from '@/assets/landing-hero-1.jpg';
 import heroImg2 from '@/assets/landing-hero-2.jpg';
