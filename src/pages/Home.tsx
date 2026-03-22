@@ -146,8 +146,9 @@ const Home = () => {
         {visibleCards.map((card) => (
           <Card
             key={card.path}
-            className="cursor-pointer transition-all hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5 group h-full flex flex-col"
+            className="card-liquid cursor-pointer group h-full flex flex-col"
             onClick={() => navigate(card.path)}
+          >
           >
             <CardContent className="p-6 flex flex-col flex-1">
               <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors" style={{ fontFamily: 'Space Grotesk' }}>
