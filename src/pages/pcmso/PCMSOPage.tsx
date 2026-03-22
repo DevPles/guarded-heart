@@ -128,8 +128,8 @@ const PCMSOPage = () => {
 
       <Tabs defaultValue="programas">
         <TabsList>
-          <TabsTrigger value="programas"><FileText className="h-4 w-4 mr-1" /> Programas</TabsTrigger>
-          <TabsTrigger value="eventos"><Calendar className="h-4 w-4 mr-1" /> Exames / Eventos</TabsTrigger>
+          <TabsTrigger value="programas">Programas</TabsTrigger>
+          <TabsTrigger value="eventos">Exames / Eventos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="programas" className="space-y-4">
