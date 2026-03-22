@@ -102,6 +102,43 @@ const ARPForm = () => {
     return (idx === 9 || idx === 10) && v >= 2; // assédio/violência
   });
 
+  const handleGeneratePdf = async () => {
+    const empresa = empresas?.find(e => e.id === empresaId);
+    if (!empresa) { toast({ title: 'Selecione uma empresa para gerar o laudo', variant: 'destructive' }); return; }
+
+    const setorNome = setores?.find(s => s.id === setorId)?.nome;
+    const { data: empDetail } = await supabase.from('empresas').select('cnpj, cnae, grau_risco').eq('id', empresaId).single();
+    const [companyLogoUrl, evaluatorName] = await Promise.all([
+      fetchCompanyLogoUrl(empresaId),
+      fetchEvaluatorLabel(user?.id),
+    ]);
+
+    const reportData: ArpReportData = {
+      title: title || 'ARP sem título',
+      empresa: empresa.razao_social,
+      companyLogoUrl,
+      cnpj: empDetail?.cnpj || undefined,
+      cnae: empDetail?.cnae || undefined,
+      grauRisco: empDetail?.grau_risco || undefined,
+      setor: setorNome,
+      description,
+      evaluator: evaluatorName,
+      date: new Date().toLocaleDateString('pt-BR'),
+      totalScore,
+      classification,
+      hasCritical,
+      questions: ARP_QUESTIONS.map((q, i) => ({
+        number: i,
+        text: q,
+        value: values[i] ?? 0,
+        comment: comments[i] || undefined,
+      })),
+    };
+
+    await generateArpPdf(reportData);
+    toast({ title: 'Laudo ARP gerado com sucesso' });
+  };
+
   const handleSave = async (finalize = false) => {
     if (!empresaId) { toast({ title: 'Selecione uma empresa', variant: 'destructive' }); return; }
     setSaving(true);
