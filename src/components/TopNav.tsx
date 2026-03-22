@@ -17,7 +17,7 @@ const TopNav = () => {
   const navigate = useNavigate();
 
   const roleLabel = primaryRole ? ROLE_LABELS[primaryRole] : '';
-  const homeRoute = primaryRole === 'colaborador' ? '/meu-painel' : '/';
+  const homeRoute = primaryRole === 'colaborador' ? '/meu-painel' : '/home';
 
   return (
     <header className="border-b bg-card">
