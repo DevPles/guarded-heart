@@ -46,7 +46,7 @@ const DocumentosPage = () => {
     queryKey: ['documents', empresaFilter],
     queryFn: async () => {
       let q = supabase.from('documents').select('*, empresas:empresa_id(razao_social)').order('proximo_vencimento', { ascending: true });
-      if (empresaFilter) q = q.eq('empresa_id', empresaFilter);
+      if (empresaFilter !== 'all') q = q.eq('empresa_id', empresaFilter);
       const { data } = await q.limit(200);
       return (data ?? []) as any[];
     },

@@ -53,7 +53,7 @@ const PCMSOPage = () => {
     queryKey: ['pcmso-eventos', empresaFilter],
     queryFn: async () => {
       let q = supabase.from('pcmso_eventos').select('*, colaboradores:colaborador_id(nome_completo), empresas:empresa_id(razao_social)').order('data_prevista', { ascending: true });
-      if (empresaFilter) q = q.eq('empresa_id', empresaFilter);
+      if (empresaFilter !== 'all') q = q.eq('empresa_id', empresaFilter);
       const { data } = await q.limit(100);
       return (data ?? []) as any[];
     },
