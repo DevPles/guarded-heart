@@ -71,7 +71,7 @@ const LandingOrHome = () => {
   if (primaryRole === 'consultor') return <Navigate to="/painel-consultor" replace />;
   if (primaryRole === 'empresa_admin') return <Navigate to="/painel-empresa" replace />;
   if (primaryRole === 'empresa_gestor') return <Navigate to="/painel-gestor" replace />;
-  return <Home />;
+  return <Navigate to="/home" replace />;
 };
 
 const App = () => (
