@@ -74,8 +74,7 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
 
         <Card className="lg:col-span-1">
           <CardContent className="p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <Activity className="h-4 w-4 text-primary" />
+            <div>
               <h3 className="font-semibold text-sm">Resultados Clínicos</h3>
             </div>
             <div className="space-y-2">
