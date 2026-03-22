@@ -97,6 +97,76 @@ export type Database = {
           },
         ]
       }
+      aso_documentos: {
+        Row: {
+          arquivo_url: string | null
+          colaborador_id: string
+          created_at: string
+          data_emissao: string
+          empresa_id: string
+          id: string
+          medico_crm: string | null
+          medico_nome: string | null
+          observacoes: string | null
+          pcmso_evento_id: string
+          resultado: string
+          tipo_aso: string
+          validade: string | null
+        }
+        Insert: {
+          arquivo_url?: string | null
+          colaborador_id: string
+          created_at?: string
+          data_emissao?: string
+          empresa_id: string
+          id?: string
+          medico_crm?: string | null
+          medico_nome?: string | null
+          observacoes?: string | null
+          pcmso_evento_id: string
+          resultado?: string
+          tipo_aso?: string
+          validade?: string | null
+        }
+        Update: {
+          arquivo_url?: string | null
+          colaborador_id?: string
+          created_at?: string
+          data_emissao?: string
+          empresa_id?: string
+          id?: string
+          medico_crm?: string | null
+          medico_nome?: string | null
+          observacoes?: string | null
+          pcmso_evento_id?: string
+          resultado?: string
+          tipo_aso?: string
+          validade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aso_documentos_colaborador_id_fkey"
+            columns: ["colaborador_id"]
+            isOneToOne: false
+            referencedRelation: "colaboradores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aso_documentos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "aso_documentos_pcmso_evento_id_fkey"
+            columns: ["pcmso_evento_id"]
+            isOneToOne: false
+            referencedRelation: "pcmso_eventos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_items: {
         Row: {
           assessment_id: string
@@ -245,6 +315,75 @@ export type Database = {
             columns: ["unidade_id"]
             isOneToOne: false
             referencedRelation: "unidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      atestados: {
+        Row: {
+          arquivo_url: string | null
+          cid: string | null
+          colaborador_id: string
+          created_at: string
+          data_fim: string | null
+          data_inicio: string
+          dias: number
+          empresa_id: string
+          id: string
+          observacoes: string | null
+          status: string
+          tipo: string
+          updated_at: string
+          validado_em: string | null
+          validado_por: string | null
+        }
+        Insert: {
+          arquivo_url?: string | null
+          cid?: string | null
+          colaborador_id: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio: string
+          dias?: number
+          empresa_id: string
+          id?: string
+          observacoes?: string | null
+          status?: string
+          tipo?: string
+          updated_at?: string
+          validado_em?: string | null
+          validado_por?: string | null
+        }
+        Update: {
+          arquivo_url?: string | null
+          cid?: string | null
+          colaborador_id?: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          dias?: number
+          empresa_id?: string
+          id?: string
+          observacoes?: string | null
+          status?: string
+          tipo?: string
+          updated_at?: string
+          validado_em?: string | null
+          validado_por?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "atestados_colaborador_id_fkey"
+            columns: ["colaborador_id"]
+            isOneToOne: false
+            referencedRelation: "colaboradores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "atestados_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
             referencedColumns: ["id"]
           },
         ]
@@ -626,6 +765,103 @@ export type Database = {
           },
         ]
       }
+      document_versions: {
+        Row: {
+          alteracoes: string | null
+          arquivo_hash: string | null
+          arquivo_url: string
+          created_at: string
+          criado_por: string | null
+          document_id: string
+          id: string
+          versao: number
+        }
+        Insert: {
+          alteracoes?: string | null
+          arquivo_hash?: string | null
+          arquivo_url: string
+          created_at?: string
+          criado_por?: string | null
+          document_id: string
+          id?: string
+          versao?: number
+        }
+        Update: {
+          alteracoes?: string | null
+          arquivo_hash?: string | null
+          arquivo_url?: string
+          created_at?: string
+          criado_por?: string | null
+          document_id?: string
+          id?: string
+          versao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_versions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          data_emissao: string | null
+          empresa_id: string
+          id: string
+          proximo_vencimento: string | null
+          referencia_id: string | null
+          referencia_tipo: string | null
+          responsavel_id: string | null
+          status: string
+          tipo_documento: string
+          titulo: string
+          updated_at: string
+          validade: string | null
+        }
+        Insert: {
+          created_at?: string
+          data_emissao?: string | null
+          empresa_id: string
+          id?: string
+          proximo_vencimento?: string | null
+          referencia_id?: string | null
+          referencia_tipo?: string | null
+          responsavel_id?: string | null
+          status?: string
+          tipo_documento: string
+          titulo: string
+          updated_at?: string
+          validade?: string | null
+        }
+        Update: {
+          created_at?: string
+          data_emissao?: string | null
+          empresa_id?: string
+          id?: string
+          proximo_vencimento?: string | null
+          referencia_id?: string | null
+          referencia_tipo?: string | null
+          responsavel_id?: string | null
+          status?: string
+          tipo_documento?: string
+          titulo?: string
+          updated_at?: string
+          validade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       empresas: {
         Row: {
           ativa: boolean
@@ -771,6 +1007,39 @@ export type Database = {
           },
         ]
       }
+      notification_user_settings: {
+        Row: {
+          antecedencia_dias: number | null
+          created_at: string
+          email_enabled: boolean
+          id: string
+          in_app_enabled: boolean
+          muted_types: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          antecedencia_dias?: number | null
+          created_at?: string
+          email_enabled?: boolean
+          id?: string
+          in_app_enabled?: boolean
+          muted_types?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          antecedencia_dias?: number | null
+          created_at?: string
+          email_enabled?: boolean
+          id?: string
+          in_app_enabled?: boolean
+          muted_types?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           action_link: string | null
@@ -821,6 +1090,174 @@ export type Database = {
           {
             foreignKeyName: "notifications_company_id_fkey"
             columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pcmso_eventos: {
+        Row: {
+          anexo_url: string | null
+          colaborador_id: string
+          created_at: string
+          data_prevista: string | null
+          data_realizada: string | null
+          empresa_id: string
+          id: string
+          observacoes: string | null
+          programa_id: string | null
+          resultado: string | null
+          tipo: string
+          tipo_exame_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          anexo_url?: string | null
+          colaborador_id: string
+          created_at?: string
+          data_prevista?: string | null
+          data_realizada?: string | null
+          empresa_id: string
+          id?: string
+          observacoes?: string | null
+          programa_id?: string | null
+          resultado?: string | null
+          tipo?: string
+          tipo_exame_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          anexo_url?: string | null
+          colaborador_id?: string
+          created_at?: string
+          data_prevista?: string | null
+          data_realizada?: string | null
+          empresa_id?: string
+          id?: string
+          observacoes?: string | null
+          programa_id?: string | null
+          resultado?: string | null
+          tipo?: string
+          tipo_exame_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pcmso_eventos_colaborador_id_fkey"
+            columns: ["colaborador_id"]
+            isOneToOne: false
+            referencedRelation: "colaboradores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pcmso_eventos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pcmso_eventos_programa_id_fkey"
+            columns: ["programa_id"]
+            isOneToOne: false
+            referencedRelation: "pcmso_programas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pcmso_eventos_tipo_exame_id_fkey"
+            columns: ["tipo_exame_id"]
+            isOneToOne: false
+            referencedRelation: "pcmso_exames_tipos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pcmso_exames_tipos: {
+        Row: {
+          ativo: boolean
+          categoria: string
+          created_at: string
+          empresa_id: string | null
+          exames_complementares: string[] | null
+          id: string
+          nome: string
+          validade_meses: number
+        }
+        Insert: {
+          ativo?: boolean
+          categoria?: string
+          created_at?: string
+          empresa_id?: string | null
+          exames_complementares?: string[] | null
+          id?: string
+          nome: string
+          validade_meses?: number
+        }
+        Update: {
+          ativo?: boolean
+          categoria?: string
+          created_at?: string
+          empresa_id?: string | null
+          exames_complementares?: string[] | null
+          id?: string
+          nome?: string
+          validade_meses?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pcmso_exames_tipos_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pcmso_programas: {
+        Row: {
+          created_at: string
+          crm: string | null
+          data_fim: string | null
+          data_inicio: string
+          empresa_id: string
+          id: string
+          observacoes: string | null
+          responsavel_medico: string | null
+          status: string
+          updated_at: string
+          versao: number
+        }
+        Insert: {
+          created_at?: string
+          crm?: string | null
+          data_fim?: string | null
+          data_inicio: string
+          empresa_id: string
+          id?: string
+          observacoes?: string | null
+          responsavel_medico?: string | null
+          status?: string
+          updated_at?: string
+          versao?: number
+        }
+        Update: {
+          created_at?: string
+          crm?: string | null
+          data_fim?: string | null
+          data_inicio?: string
+          empresa_id?: string
+          id?: string
+          observacoes?: string | null
+          responsavel_medico?: string | null
+          status?: string
+          updated_at?: string
+          versao?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pcmso_programas_empresa_id_fkey"
+            columns: ["empresa_id"]
             isOneToOne: false
             referencedRelation: "empresas"
             referencedColumns: ["id"]
@@ -897,6 +1334,56 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "profiles_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      responsaveis_tecnicos: {
+        Row: {
+          ativo: boolean
+          conselho: string
+          created_at: string
+          empresa_id: string | null
+          especialidade: string | null
+          id: string
+          nome: string
+          numero_registro: string
+          uf: string | null
+          updated_at: string
+          validade: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          conselho: string
+          created_at?: string
+          empresa_id?: string | null
+          especialidade?: string | null
+          id?: string
+          nome: string
+          numero_registro: string
+          uf?: string | null
+          updated_at?: string
+          validade?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          conselho?: string
+          created_at?: string
+          empresa_id?: string | null
+          especialidade?: string | null
+          id?: string
+          nome?: string
+          numero_registro?: string
+          uf?: string | null
+          updated_at?: string
+          validade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "responsaveis_tecnicos_empresa_id_fkey"
             columns: ["empresa_id"]
             isOneToOne: false
             referencedRelation: "empresas"
@@ -1001,6 +1488,56 @@ export type Database = {
             columns: ["unidade_id"]
             isOneToOne: false
             referencedRelation: "unidades"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      signatures: {
+        Row: {
+          created_at: string
+          device_info: string | null
+          document_id: string
+          id: string
+          ip_address: string | null
+          sign_type: string
+          signed_at: string | null
+          signer_name: string
+          signer_registration: string | null
+          signer_role: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          device_info?: string | null
+          document_id: string
+          id?: string
+          ip_address?: string | null
+          sign_type?: string
+          signed_at?: string | null
+          signer_name: string
+          signer_registration?: string | null
+          signer_role?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          device_info?: string | null
+          document_id?: string
+          id?: string
+          ip_address?: string | null
+          sign_type?: string
+          signed_at?: string | null
+          signer_name?: string
+          signer_registration?: string | null
+          signer_role?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signatures_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
             referencedColumns: ["id"]
           },
         ]
