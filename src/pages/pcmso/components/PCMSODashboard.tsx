@@ -23,10 +23,10 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
   const conformidade = eventos.length > 0 ? Math.round((realizados.length / eventos.length) * 100) : 100;
 
   const stats = [
-    { label: 'Exames Vencidos', value: vencidos.length, icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-950/30', border: 'border-red-200 dark:border-red-900', urgent: vencidos.length > 0 },
-    { label: 'Próximos 30 dias', value: proximosVencer.length, icon: CalendarClock, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/30', border: 'border-amber-200 dark:border-amber-900', urgent: proximosVencer.length > 0 },
-    { label: 'Pendentes', value: pendentes.length, icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30', border: 'border-blue-200 dark:border-blue-900', urgent: false },
-    { label: 'Realizados', value: realizados.length, icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-200 dark:border-green-900', urgent: false },
+    { label: 'Exames Vencidos', value: vencidos.length, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-950/30', border: 'border-red-200 dark:border-red-900', urgent: vencidos.length > 0 },
+    { label: 'Próximos 30 dias', value: proximosVencer.length, color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-950/30', border: 'border-amber-200 dark:border-amber-900', urgent: proximosVencer.length > 0 },
+    { label: 'Pendentes', value: pendentes.length, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-950/30', border: 'border-blue-200 dark:border-blue-900', urgent: false },
+    { label: 'Realizados', value: realizados.length, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-200 dark:border-green-900', urgent: false },
   ];
 
   return (
