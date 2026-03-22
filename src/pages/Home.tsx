@@ -143,7 +143,7 @@ const Home = () => {
       <div className="relative z-10">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">Painel Principal</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-white/70 mt-1">
           {primaryRole ? ROLE_LABELS[primaryRole] : 'Selecione um módulo para começar'}
         </p>
       </div>
