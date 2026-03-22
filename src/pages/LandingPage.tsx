@@ -45,8 +45,11 @@ function ScrollText({
   return (
     <motion.div
       ref={ref}
-      initial={v.hidden}
-      animate={inView ? v.visible : v.hidden}
+      initial={{ opacity: 0, ...(direction === 'up' ? { y: 80 } : direction === 'left' ? { x: -80 } : direction === 'right' ? { x: 80 } : { scale: 0.85 }) }}
+      animate={inView
+        ? { opacity: 1, y: 0, x: 0, scale: 1 }
+        : { opacity: 0, ...(direction === 'up' ? { y: 80 } : direction === 'left' ? { x: -80 } : direction === 'right' ? { x: 80 } : { scale: 0.85 }) }
+      }
       transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
