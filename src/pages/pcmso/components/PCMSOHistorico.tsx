@@ -38,7 +38,6 @@ const PCMSOHistorico = ({ eventos }: Props) => {
       {sorted.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
-            <Calendar className="h-10 w-10 mx-auto mb-3 opacity-40" />
             <p>Nenhum registro encontrado para exibir o histórico.</p>
           </CardContent>
         </Card>
