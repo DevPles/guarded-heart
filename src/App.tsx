@@ -28,6 +28,9 @@ import ConsultorDashboard from "./pages/consultor/ConsultorDashboard";
 import EmpresaAdminDashboard from "./pages/empresa/EmpresaAdminDashboard";
 import EmpresaGestorDashboard from "./pages/empresa/EmpresaGestorDashboard";
 import NotificacoesPage from "./pages/notificacoes/NotificacoesPage";
+import PCMSOPage from "./pages/pcmso/PCMSOPage";
+import AtestadosPage from "./pages/atestados/AtestadosPage";
+import DocumentosPage from "./pages/documentos/DocumentosPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -92,13 +95,16 @@ const App = () => (
               <Route path="/aet/:id" element={<RoleGuard allowed={['admin_master', 'consultor']}><AETForm /></RoleGuard>} />
               <Route path="/riscos-psicossociais" element={<RoleGuard allowed={['admin_master', 'consultor']}><RiscosPsicossociaisList /></RoleGuard>} />
               <Route path="/riscos-psicossociais/:id" element={<RoleGuard allowed={['admin_master', 'consultor']}><ARPForm /></RoleGuard>} />
+              <Route path="/pcmso" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><PCMSOPage /></RoleGuard>} />
+              <Route path="/atestados" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><AtestadosPage /></RoleGuard>} />
+              <Route path="/documentos" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><DocumentosPage /></RoleGuard>} />
               <Route path="/checklists" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor', 'colaborador']}><ChecklistsList /></RoleGuard>} />
               <Route path="/checklists/:id" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor', 'colaborador']}><ChecklistForm /></RoleGuard>} />
               <Route path="/planos-acao" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><PlanosAcaoList /></RoleGuard>} />
               <Route path="/planos-acao/:id" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><PlanoAcaoForm /></RoleGuard>} />
               <Route path="/laudos" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><LaudosList /></RoleGuard>} />
-              <Route path="/dashboard" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><DashboardPage /></RoleGuard>} />
               <Route path="/notificacoes" element={<NotificacoesPage />} />
+              <Route path="/dashboard" element={<RoleGuard allowed={['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor']}><DashboardPage /></RoleGuard>} />
               <Route path="/configuracoes" element={<RoleGuard allowed={['admin_master']}><ConfiguracoesPage /></RoleGuard>} />
             </Route>
             <Route path="*" element={<NotFound />} />

@@ -42,6 +42,24 @@ const navCards: NavCard[] = [
     allowedRoles: ['admin_master', 'consultor'],
   },
   {
+    title: 'PCMSO — Saúde Ocupacional',
+    description: 'Programas, exames periódicos e ASOs conforme NR-07',
+    path: '/pcmso',
+    allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor'],
+  },
+  {
+    title: 'Atestados e Absenteísmo',
+    description: 'Registro e acompanhamento de afastamentos e atestados',
+    path: '/atestados',
+    allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor'],
+  },
+  {
+    title: 'Documentos e Vencimentos',
+    description: 'Controle documental, versionamento e assinaturas',
+    path: '/documentos',
+    allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor'],
+  },
+  {
     title: 'Checklists Mensais',
     description: 'Monitoramento contínuo mensal dos colaboradores',
     path: '/checklists',
@@ -60,6 +78,12 @@ const navCards: NavCard[] = [
     description: 'Geração e gestão de documentos e laudos em PDF',
     path: '/laudos',
     allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor'],
+  },
+  {
+    title: 'Notificações',
+    description: 'Central de alertas, vencimentos e pendências',
+    path: '/notificacoes',
+    allowedRoles: ['admin_master', 'consultor', 'empresa_admin', 'empresa_gestor', 'colaborador'],
   },
   {
     title: 'Dashboard',
