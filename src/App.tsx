@@ -27,6 +27,7 @@ import ColaboradorPortal from "./pages/colaborador/ColaboradorPortal";
 import ConsultorDashboard from "./pages/consultor/ConsultorDashboard";
 import EmpresaAdminDashboard from "./pages/empresa/EmpresaAdminDashboard";
 import EmpresaGestorDashboard from "./pages/empresa/EmpresaGestorDashboard";
+import NotificacoesPage from "./pages/notificacoes/NotificacoesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
