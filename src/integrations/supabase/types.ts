@@ -692,6 +692,141 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          notification_id: string | null
+          performed_by: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notification_id?: string | null
+          performed_by?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          notification_id?: string | null
+          performed_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_logs_notification_id_fkey"
+            columns: ["notification_id"]
+            isOneToOne: false
+            referencedRelation: "notifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_rules: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          days_before: number[]
+          enabled: boolean
+          id: string
+          priority: Database["public"]["Enums"]["notification_priority"]
+          repeat_after_days: number | null
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          days_before?: number[]
+          enabled?: boolean
+          id?: string
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          repeat_after_days?: number | null
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          days_before?: number[]
+          enabled?: boolean
+          id?: string
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          repeat_after_days?: number | null
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_rules_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          action_link: string | null
+          company_id: string | null
+          created_at: string
+          description: string | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          priority: Database["public"]["Enums"]["notification_priority"]
+          read_at: string | null
+          status: Database["public"]["Enums"]["notification_status"]
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          action_link?: string | null
+          company_id?: string | null
+          created_at?: string
+          description?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          read_at?: string | null
+          status?: Database["public"]["Enums"]["notification_status"]
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          action_link?: string | null
+          company_id?: string | null
+          created_at?: string
+          description?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          priority?: Database["public"]["Enums"]["notification_priority"]
+          read_at?: string | null
+          status?: Database["public"]["Enums"]["notification_status"]
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       planos: {
         Row: {
           ativo: boolean
@@ -957,6 +1092,8 @@ export type Database = {
         | "finalizado"
         | "cancelado"
       assessment_type: "aep" | "aet" | "arp"
+      notification_priority: "info" | "warning" | "critical"
+      notification_status: "pending" | "viewed" | "resolved"
       risk_classification: "baixo" | "moderado" | "alto" | "critico"
     }
     CompositeTypes: {
@@ -1100,6 +1237,8 @@ export const Constants = {
         "cancelado",
       ],
       assessment_type: ["aep", "aet", "arp"],
+      notification_priority: ["info", "warning", "critical"],
+      notification_status: ["pending", "viewed", "resolved"],
       risk_classification: ["baixo", "moderado", "alto", "critico"],
     },
   },
