@@ -371,6 +371,8 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
     setIndustry('');
     setCompanyName('');
     setCnpjSearched(false);
+    setCnpjData(null);
+    setCnpjError('');
     onClose();
   };
 
