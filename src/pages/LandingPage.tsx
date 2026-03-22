@@ -236,6 +236,37 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [contactForm, setContactForm] = useState({ nome: '', empresa: '', email: '', telefone: '' });
   const [submitted, setSubmitted] = useState(false);
 
+  // Step 1 — Company identification
+  const [cnpj, setCnpj] = useState('');
+  const [companyType, setCompanyType] = useState('');
+  const [industry, setIndustry] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [cnpjSearched, setCnpjSearched] = useState(false);
+  const [cnpjLoading, setCnpjLoading] = useState(false);
+
+  const industryProfile = industryProfiles[industry] || null;
+
+  const formatCnpj = (value: string) => {
+    const nums = value.replace(/\D/g, '').slice(0, 14);
+    return nums.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5')
+      .replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4')
+      .replace(/^(\d{2})(\d{3})(\d{3})/, '$1.$2.$3')
+      .replace(/^(\d{2})(\d{3})/, '$1.$2')
+      .replace(/^(\d{2})/, '$1');
+  };
+
+  const handleCnpjSearch = async () => {
+    const nums = cnpj.replace(/\D/g, '');
+    if (nums.length !== 14) return;
+    setCnpjLoading(true);
+    // Simulate CNPJ lookup (in production, use ReceitaWS or similar)
+    await new Promise(r => setTimeout(r, 1200));
+    // Mock result based on CNPJ
+    setCompanyName('Empresa identificada via CNPJ');
+    setCnpjSearched(true);
+    setCnpjLoading(false);
+  };
+
   const toggle = (id: string) => {
     setSelected(prev => {
       const next = new Set(prev);
