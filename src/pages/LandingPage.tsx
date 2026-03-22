@@ -65,18 +65,24 @@ interface ServiceOption {
   description: string;
   basePrice: number;
   category: 'essential' | 'advanced' | 'premium';
+  /** Custo médio de processos/multas SEM o serviço */
+  avgLawsuitCost: number;
+  /** % de redução de risco com o serviço */
+  riskReduction: number;
+  /** Texto explicativo do risco */
+  riskContext: string;
 }
 
 const services: ServiceOption[] = [
-  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', basePrice: 800, category: 'essential' },
-  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', basePrice: 1500, category: 'essential' },
-  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', basePrice: 1200, category: 'essential' },
-  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', basePrice: 2000, category: 'advanced' },
-  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', basePrice: 900, category: 'advanced' },
-  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', basePrice: 600, category: 'advanced' },
-  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', basePrice: 1100, category: 'premium' },
-  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', basePrice: 1800, category: 'premium' },
-  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', basePrice: 1500, category: 'premium' },
+  { id: 'aep', label: 'Avaliação Ergonômica Preliminar (AEP)', description: 'Identificação inicial de riscos ergonômicos no ambiente de trabalho', basePrice: 800, category: 'essential', avgLawsuitCost: 85000, riskReduction: 0.60, riskContext: 'Processos por LER/DORT e doenças ocupacionais custam em média R$ 85 mil por caso.' },
+  { id: 'aet', label: 'Análise Ergonômica do Trabalho (AET)', description: 'Análise aprofundada com recomendações técnicas detalhadas', basePrice: 1500, category: 'essential', avgLawsuitCost: 120000, riskReduction: 0.75, riskContext: 'Perícias trabalhistas sem laudo técnico geram condenações médias de R$ 120 mil.' },
+  { id: 'pcmso', label: 'Gestão PCMSO Integrada', description: 'Controle de exames médicos, ASOs e cronogramas de saúde', basePrice: 1200, category: 'essential', avgLawsuitCost: 45000, riskReduction: 0.70, riskContext: 'Multas do MTE por PCMSO irregular variam de R$ 15 mil a R$ 45 mil por infração.' },
+  { id: 'psicossocial', label: 'Avaliação de Riscos Psicossociais', description: 'Mapeamento de fatores como estresse, assédio e carga mental', basePrice: 2000, category: 'advanced', avgLawsuitCost: 200000, riskReduction: 0.65, riskContext: 'Ações por assédio moral e burnout geram indenizações médias de R$ 200 mil.' },
+  { id: 'dashboard', label: 'Dashboard Executivo e Indicadores', description: 'Painel visual com KPIs, tendências e relatórios para gestão', basePrice: 900, category: 'advanced', avgLawsuitCost: 30000, riskReduction: 0.50, riskContext: 'Empresas sem indicadores perdem em média R$ 30 mil/ano com decisões reativas.' },
+  { id: 'alertas', label: 'Alertas e Notificações Inteligentes', description: 'Avisos automáticos de vencimentos, prazos e ações pendentes', basePrice: 600, category: 'advanced', avgLawsuitCost: 25000, riskReduction: 0.55, riskContext: 'Exames e documentos vencidos geram multas médias de R$ 25 mil por ocorrência.' },
+  { id: 'planos_acao', label: 'Planos de Ação Automatizados', description: 'Geração automática de planos corretivos com rastreabilidade', basePrice: 1100, category: 'premium', avgLawsuitCost: 60000, riskReduction: 0.70, riskContext: 'Sem plano de ação documentado, multas por reincidência chegam a R$ 60 mil.' },
+  { id: 'multiempresa', label: 'Gestão Multi-empresa', description: 'Gerencie diversas empresas em um único painel centralizado', basePrice: 1800, category: 'premium', avgLawsuitCost: 150000, riskReduction: 0.60, riskContext: 'Gestão descentralizada expõe cada filial a processos independentes de até R$ 150 mil.' },
+  { id: 'suporte', label: 'Suporte Prioritário e Personalização', description: 'Atendimento dedicado, treinamentos e configurações sob medida', basePrice: 1500, category: 'premium', avgLawsuitCost: 40000, riskReduction: 0.45, riskContext: 'Erros operacionais por falta de treinamento geram custos médios de R$ 40 mil.' },
 ];
 
 const categoryLabels: Record<string, { label: string; color: string }> = {
@@ -139,8 +145,14 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const monthlyWithMarkup = Math.ceil(baseTotal * MARKUP);
   const monthlyWithDiscount = Math.ceil(monthlyWithMarkup * (1 - contractOption.discount));
   const totalContract = monthlyWithDiscount * contractOption.months;
-  const perEmployee = colaboradores > 0 ? monthlyWithDiscount / colaboradores : 0;
   const savings = contractOption.discount > 0 ? (monthlyWithMarkup - monthlyWithDiscount) * contractOption.months : 0;
+
+  // Cálculos de impacto — risco total e economia potencial
+  const totalRiskExposure = selectedServices.reduce((sum, s) => sum + s.avgLawsuitCost, 0);
+  const avgReduction = selectedServices.length > 0
+    ? selectedServices.reduce((sum, s) => sum + s.riskReduction, 0) / selectedServices.length
+    : 0;
+  const potentialSavings = Math.round(totalRiskExposure * avgReduction);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -258,32 +270,93 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                           {services.filter(s => s.category === cat).map(service => {
                             const isSelected = selected.has(service.id);
                             return (
-                              <button
-                                key={service.id}
-                                onClick={() => toggle(service.id)}
-                                className={`w-full flex items-center justify-between gap-4 p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                                  isSelected
-                                    ? 'border-teal-400 bg-teal-50/50'
-                                    : 'border-gray-100 bg-white hover:border-gray-200'
-                                }`}
-                              >
-                                <div className="flex-1 min-w-0">
-                                  <p className={`text-sm font-semibold ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>
-                                    {service.label}
-                                  </p>
-                                  <p className="text-xs text-gray-400 mt-0.5">{service.description}</p>
-                                </div>
-                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
-                                  isSelected ? 'border-teal-500 bg-teal-500' : 'border-gray-300'
-                                }`}>
-                                  {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
-                                </div>
-                              </button>
+                              <div key={service.id}>
+                                <button
+                                  onClick={() => toggle(service.id)}
+                                  className={`w-full p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                                    isSelected
+                                      ? 'border-teal-400 bg-teal-50/50'
+                                      : 'border-gray-100 bg-white hover:border-gray-200'
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between gap-4">
+                                    <div className="flex-1 min-w-0">
+                                      <p className={`text-sm font-semibold ${isSelected ? 'text-gray-900' : 'text-gray-600'}`}>
+                                        {service.label}
+                                      </p>
+                                      <p className="text-xs text-gray-400 mt-0.5">{service.description}</p>
+                                    </div>
+                                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+                                      isSelected ? 'border-teal-500 bg-teal-500' : 'border-gray-300'
+                                    }`}>
+                                      {isSelected && <Check className="w-3.5 h-3.5 text-white" />}
+                                    </div>
+                                  </div>
+                                  {/* Risk impact — shown when selected */}
+                                  <AnimatePresence>
+                                    {isSelected && (
+                                      <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.25 }}
+                                        className="overflow-hidden"
+                                      >
+                                        <div className="mt-3 pt-3 border-t border-teal-200/50">
+                                          <p className="text-xs text-gray-500 mb-2">{service.riskContext}</p>
+                                          <div className="flex items-center gap-4">
+                                            <div className="flex-1">
+                                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Custo médio sem proteção</p>
+                                              <p className="text-sm font-bold text-red-500">R$ {service.avgLawsuitCost.toLocaleString('pt-BR')}</p>
+                                            </div>
+                                            <div className="flex-1">
+                                              <p className="text-[10px] text-gray-400 uppercase tracking-wider">Redução com Ergon</p>
+                                              <p className="text-sm font-bold text-teal-600">até {Math.round(service.riskReduction * 100)}%</p>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </motion.div>
+                                    )}
+                                  </AnimatePresence>
+                                </button>
+                              </div>
                             );
                           })}
                         </div>
                       </div>
                     ))}
+
+                    {/* Resumo de impacto acumulado */}
+                    {selectedServices.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="p-5 rounded-2xl bg-gray-900 text-white"
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
+                          Impacto da sua proteção
+                        </p>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-xs text-gray-400">Exposição total sem sistema</p>
+                            <p className="text-xl font-bold text-red-400" style={{ fontFamily: "'Space Grotesk'" }}>
+                              R$ {totalRiskExposure.toLocaleString('pt-BR')}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-400">Economia potencial com Ergon</p>
+                            <p className="text-xl font-bold text-teal-400" style={{ fontFamily: "'Space Grotesk'" }}>
+                              R$ {potentialSavings.toLocaleString('pt-BR')}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-gray-700">
+                          <p className="text-xs text-gray-400">
+                            Com {selectedServices.length} {selectedServices.length === 1 ? 'serviço selecionado' : 'serviços selecionados'}, sua empresa reduz em média {Math.round(avgReduction * 100)}% dos riscos trabalhistas mapeados.
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
                   </motion.div>
                 )}
 
@@ -357,9 +430,8 @@ function QuoteModal({ open, onClose }: { open: boolean; onClose: () => void }) {
                                 )}
                               </div>
                             </div>
-                            <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-400">
+                            <div className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400">
                               <span>Total do contrato: R$ {total.toLocaleString('pt-BR')}</span>
-                              <span>R$ {perEmployee.toFixed(2).replace('.', ',')} por colaborador/mês</span>
                             </div>
                           </button>
                         );
