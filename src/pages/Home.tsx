@@ -134,9 +134,15 @@ const Home = () => {
   );
 
   return (
-    <div>
+    <div className="min-h-[calc(100vh-4rem)] -m-6 p-6 bg-gradient-to-br from-[hsl(215,60%,22%)] to-[hsl(200,70%,42%)] relative overflow-hidden">
+      {/* Decorative circles */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-white/5" />
+      <div className="absolute -bottom-40 -right-32 w-[500px] h-[500px] rounded-full bg-white/5" />
+      <div className="absolute top-1/3 right-16 w-48 h-48 rounded-full bg-white/5" />
+
+      <div className="relative z-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">Painel Principal</h1>
+        <h1 className="text-3xl font-bold text-white">Painel Principal</h1>
         <p className="text-muted-foreground mt-1">
           {primaryRole ? ROLE_LABELS[primaryRole] : 'Selecione um módulo para começar'}
         </p>
