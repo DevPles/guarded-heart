@@ -39,12 +39,9 @@ const PCMSODashboard = ({ eventos, programas }: Props) => {
               <div className="absolute top-0 right-0 w-2 h-full bg-current opacity-40" style={{ color: s.color.replace('text-', '') }} />
             )}
             <CardContent className="p-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{s.label}</p>
-                  <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
-                </div>
-                <s.icon className={`h-5 w-5 ${s.color} opacity-70`} />
+              <div>
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{s.label}</p>
+                <p className={`text-3xl font-bold mt-1 ${s.color}`}>{s.value}</p>
               </div>
             </CardContent>
           </Card>
