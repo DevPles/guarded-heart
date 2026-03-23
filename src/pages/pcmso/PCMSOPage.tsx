@@ -68,7 +68,7 @@ const PCMSOPage = () => {
         </TabsContent>
 
         <TabsContent value="programas" className="mt-4">
-          <PCMSOProgramas empresas={empresas} programas={programas} />
+          <PCMSOProgramas empresas={empresas} programas={programas} eventos={eventos} />
         </TabsContent>
 
         <TabsContent value="eventos" className="mt-4">
