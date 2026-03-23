@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,8 +12,26 @@ const Login2 = () => {
   const [name, setName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [animPhase, setAnimPhase] = useState<'idle' | 'pulling' | 'done'>('idle');
   const { signIn } = useAuth();
   const { toast } = useToast();
+
+  // Entrance animation: character "pulls" the form out of briefcase
+  useEffect(() => {
+    const t1 = setTimeout(() => setAnimPhase('pulling'), 400);
+    const t2 = setTimeout(() => setAnimPhase('done'), 1200);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+
+  // Re-trigger animation on toggle
+  const handleToggle = (signUp: boolean) => {
+    setAnimPhase('idle');
+    setTimeout(() => setAnimPhase('pulling'), 100);
+    setTimeout(() => {
+      setAnimPhase('done');
+      setIsSignUp(signUp);
+    }, 500);
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,246 +47,246 @@ const Login2 = () => {
     e.preventDefault();
     toast({
       title: 'Acesso por convite',
-      description: 'O cadastro é feito pelo administrador do sistema. Solicite um convite ao seu gestor.',
+      description: 'O cadastro é feito pelo administrador do sistema.',
     });
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[hsl(220,25%,8%)] relative overflow-hidden">
-      {/* Background animated blobs */}
+      {/* Animated background */}
       <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-[hsl(var(--primary)/0.08)] blur-[150px] animate-pulse" />
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-[hsl(var(--accent)/0.06)] blur-[150px] animate-pulse" style={{ animationDelay: '1.5s' }} />
 
-      {/* Main card */}
-      <div className="relative z-10 w-full max-w-[900px] mx-4 h-[540px] rounded-3xl overflow-hidden shadow-2xl flex">
-        
-        {/* LEFT: Blue creative panel */}
-        <div
-          className={`relative w-1/2 flex flex-col items-center justify-center transition-all duration-700 ease-in-out overflow-hidden ${
-            isSignUp ? 'translate-x-full' : 'translate-x-0'
-          }`}
-          style={{
-            background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(210 80% 55%), hsl(var(--accent)))',
-            zIndex: 20,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            height: '100%',
-          }}
-        >
-          {/* Decorative shapes */}
-          <div className="absolute top-10 left-10 w-20 h-20 rounded-full border-2 border-white/10 animate-pulse" />
-          <div className="absolute bottom-20 right-8 w-32 h-32 rounded-full border border-white/5" />
-          <div className="absolute top-1/3 right-4 w-12 h-12 rounded-lg bg-white/5 rotate-45" />
+      <style>{`
+        @keyframes characterBounce {
+          0% { transform: translateY(80px) scale(0.8); opacity: 0; }
+          50% { transform: translateY(-10px) scale(1.05); opacity: 1; }
+          70% { transform: translateY(5px) scale(0.98); }
+          100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes characterPull {
+          0% { transform: translateY(0) rotate(0deg); }
+          30% { transform: translateY(-15px) rotate(-8deg); }
+          60% { transform: translateY(-5px) rotate(3deg); }
+          100% { transform: translateY(0) rotate(0deg); }
+        }
+        @keyframes formSlideFromBriefcase {
+          0% { 
+            transform: translateY(120px) scale(0.3) rotateX(40deg); 
+            opacity: 0; 
+            filter: blur(8px);
+          }
+          40% {
+            transform: translateY(40px) scale(0.7) rotateX(15deg);
+            opacity: 0.6;
+            filter: blur(3px);
+          }
+          70% {
+            transform: translateY(-10px) scale(1.02) rotateX(-3deg);
+            opacity: 1;
+            filter: blur(0);
+          }
+          100% { 
+            transform: translateY(0) scale(1) rotateX(0deg); 
+            opacity: 1; 
+            filter: blur(0);
+          }
+        }
+        @keyframes formHideIntoBriefcase {
+          0% { 
+            transform: translateY(0) scale(1) rotateX(0deg); 
+            opacity: 1; 
+          }
+          100% { 
+            transform: translateY(120px) scale(0.3) rotateX(40deg); 
+            opacity: 0;
+            filter: blur(8px);
+          }
+        }
+        @keyframes briefcaseGlow {
+          0% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+          50% { box-shadow: 0 0 40px 10px hsl(var(--primary) / 0.3); }
+          100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+        }
+        @keyframes characterIdle {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        .character-entrance {
+          animation: characterBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .character-pull {
+          animation: characterPull 0.6s ease-in-out;
+        }
+        .character-idle {
+          animation: characterIdle 3s ease-in-out infinite;
+        }
+        .form-appear {
+          animation: formSlideFromBriefcase 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .form-hide {
+          animation: formHideIntoBriefcase 0.4s ease-in forwards;
+        }
+        .briefcase-glow {
+          animation: briefcaseGlow 1s ease-out;
+        }
+      `}</style>
 
-          <div className="relative z-10 text-center px-8">
-            <img src={logoErgon} alt="Ergon" className="h-12 mx-auto mb-6 brightness-0 invert" />
-            
-            {!isSignUp ? (
-              <div className="animate-fade-in">
-                <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
-                  Saúde Ocupacional<br />com Evidências
-                </h2>
-                <p className="text-white/70 text-sm mb-6 max-w-[260px] mx-auto">
-                  O ecossistema completo para gestão de ergonomia e saúde do trabalho.
-                </p>
-                {/* 3D Character */}
-                <img
-                  src={loginCharacter}
-                  alt=""
-                  className="w-40 h-40 mx-auto mb-6 object-contain drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
-                />
-                <Button
-                  variant="outline"
-                  className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white h-11 px-8 text-sm backdrop-blur-sm"
-                  onClick={() => setIsSignUp(true)}
-                >
-                  Criar Conta
-                </Button>
-              </div>
-            ) : (
-              <div className="animate-fade-in">
-                <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
-                  Já tem acesso?
-                </h2>
-                <p className="text-white/70 text-sm mb-6 max-w-[260px] mx-auto">
-                  Entre com suas credenciais e retome o controle da sua gestão.
-                </p>
-                <img
-                  src={loginCharacter}
-                  alt=""
-                  className="w-40 h-40 mx-auto mb-6 object-contain drop-shadow-2xl"
-                  style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
-                />
-                <Button
-                  variant="outline"
-                  className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white h-11 px-8 text-sm backdrop-blur-sm"
-                  onClick={() => setIsSignUp(false)}
-                >
-                  Entrar
-                </Button>
-              </div>
-            )}
-          </div>
+      <div className="relative z-10 flex flex-col items-center gap-0">
+        {/* Character area */}
+        <div className="relative z-20 mb-[-40px]">
+          {/* Glow behind briefcase */}
+          <div
+            className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-full ${
+              animPhase === 'pulling' ? 'briefcase-glow' : ''
+            }`}
+            style={{ background: 'radial-gradient(ellipse, hsl(var(--primary) / 0.2), transparent)' }}
+          />
+          <img
+            src={loginCharacter}
+            alt=""
+            className={`w-44 h-44 object-contain drop-shadow-2xl ${
+              animPhase === 'idle'
+                ? 'character-entrance'
+                : animPhase === 'pulling'
+                ? 'character-pull'
+                : 'character-idle'
+            }`}
+            style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))' }}
+          />
         </div>
 
-        {/* RIGHT: Sign In Form */}
+        {/* Form card — animated as if pulled from briefcase */}
         <div
-          className={`absolute top-0 left-0 w-1/2 h-full flex flex-col items-center justify-center p-10 transition-all duration-700 ease-in-out ${
-            isSignUp ? 'opacity-0 pointer-events-none -translate-x-8' : 'opacity-100 translate-x-0'
+          className={`relative z-10 w-[420px] max-w-[90vw] rounded-2xl overflow-hidden ${
+            animPhase === 'idle'
+              ? 'opacity-0'
+              : animPhase === 'pulling'
+              ? 'form-appear'
+              : ''
           }`}
           style={{
-            marginLeft: '50%',
-            background: 'linear-gradient(180deg, hsl(220 20% 12%), hsl(220 20% 9%))',
+            perspective: '800px',
+            background: 'linear-gradient(180deg, hsl(220 20% 14% / 0.95), hsl(220 20% 10% / 0.95))',
+            backdropFilter: 'blur(40px)',
+            border: '1px solid hsl(var(--primary) / 0.15)',
+            boxShadow: '0 25px 80px -20px hsl(var(--primary) / 0.25), 0 0 0 1px hsl(0 0% 100% / 0.03)',
+            opacity: animPhase === 'done' ? 1 : undefined,
           }}
         >
-          <div className="w-full max-w-sm">
-            <h2 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk' }}>
+          {/* Tab switcher */}
+          <div className="flex border-b border-white/5">
+            <button
+              onClick={() => !isSignUp || handleToggle(false)}
+              className={`flex-1 py-3 text-sm font-medium transition-all duration-300 ${
+                !isSignUp
+                  ? 'text-white border-b-2 border-[hsl(var(--primary))] bg-white/5'
+                  : 'text-white/30 hover:text-white/50'
+              }`}
+            >
               Entrar
-            </h2>
-            <p className="text-white/40 text-sm mb-8">Acesse sua conta</p>
-
-            <form onSubmit={handleSignIn} className="space-y-5">
-              <div>
-                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">E-mail</label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="seu@email.com"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.2)]"
-                />
-              </div>
-              <div>
-                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Senha</label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.2)]"
-                />
-              </div>
-              <Button
-                type="submit"
-                disabled={submitting}
-                className="w-full h-12 rounded-xl text-base font-semibold"
-                style={{
-                  background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
-                  boxShadow: '0 8px 32px -8px hsl(var(--primary) / 0.5)',
-                }}
-              >
-                {submitting ? 'Entrando...' : 'Entrar'}
-              </Button>
-            </form>
-          </div>
-        </div>
-
-        {/* LEFT SIDE: Sign Up Form */}
-        <div
-          className={`absolute top-0 right-0 w-1/2 h-full flex flex-col items-center justify-center p-10 transition-all duration-700 ease-in-out ${
-            isSignUp ? 'opacity-100 translate-x-0' : 'opacity-0 pointer-events-none translate-x-8'
-          }`}
-          style={{
-            marginRight: '50%',
-            left: 0,
-            background: 'linear-gradient(180deg, hsl(220 20% 12%), hsl(220 20% 9%))',
-          }}
-        >
-          <div className="w-full max-w-sm">
-            <h2 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk' }}>
+            </button>
+            <button
+              onClick={() => isSignUp || handleToggle(true)}
+              className={`flex-1 py-3 text-sm font-medium transition-all duration-300 ${
+                isSignUp
+                  ? 'text-white border-b-2 border-[hsl(var(--accent))] bg-white/5'
+                  : 'text-white/30 hover:text-white/50'
+              }`}
+            >
               Criar Conta
-            </h2>
-            <p className="text-white/40 text-sm mb-8">Solicite acesso ao sistema</p>
-
-            <form onSubmit={handleSignUp} className="space-y-5">
-              <div>
-                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Nome</label>
-                <Input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  placeholder="Seu nome completo"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
-                />
-              </div>
-              <div>
-                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">E-mail</label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  placeholder="seu@email.com"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
-                />
-              </div>
-              <div>
-                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Senha</label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full h-12 rounded-xl text-base font-semibold"
-                style={{
-                  background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))',
-                  boxShadow: '0 8px 32px -8px hsl(var(--accent) / 0.5)',
-                }}
-              >
-                Solicitar Acesso
-              </Button>
-            </form>
+            </button>
           </div>
-        </div>
 
-        {/* Mobile fallback */}
-        <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center p-6 z-30"
-          style={{ background: 'linear-gradient(180deg, hsl(220 20% 12%), hsl(220 20% 9%))' }}
-        >
-          <img src={logoErgon} alt="Ergon" className="h-10 mx-auto mb-6 brightness-0 invert" />
-          {!isSignUp ? (
-            <div className="w-full max-w-sm animate-fade-in">
-              <h2 className="text-2xl font-bold text-white mb-1 text-center" style={{ fontFamily: 'Space Grotesk' }}>Entrar</h2>
-              <p className="text-white/40 text-sm mb-6 text-center">Acesse sua conta</p>
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="E-mail" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Senha" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
-                <Button type="submit" className="w-full h-12" disabled={submitting} style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))' }}>
+          <div className="p-8">
+            <div className="text-center mb-6">
+              <img src={logoErgon} alt="Ergon" className="h-8 mx-auto mb-4 brightness-0 invert opacity-70" />
+            </div>
+
+            {!isSignUp ? (
+              <form onSubmit={handleSignIn} className="space-y-4 animate-fade-in">
+                <div>
+                  <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">E-mail</label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="seu@email.com"
+                    className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.2)]"
+                  />
+                </div>
+                <div>
+                  <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Senha</label>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.2)]"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full h-11 rounded-xl text-sm font-semibold mt-2"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
+                    boxShadow: '0 8px 32px -8px hsl(var(--primary) / 0.5)',
+                  }}
+                >
                   {submitting ? 'Entrando...' : 'Entrar'}
                 </Button>
               </form>
-              <button onClick={() => setIsSignUp(true)} className="w-full text-center mt-6 text-sm text-[hsl(var(--primary))] font-medium">
-                Não tem conta? Cadastrar
-              </button>
-            </div>
-          ) : (
-            <div className="w-full max-w-sm animate-fade-in">
-              <h2 className="text-2xl font-bold text-white mb-1 text-center" style={{ fontFamily: 'Space Grotesk' }}>Criar Conta</h2>
-              <p className="text-white/40 text-sm mb-6 text-center">Solicite acesso</p>
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <Input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Nome" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="E-mail" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Senha" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
-                <Button type="submit" className="w-full h-12" style={{ background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))' }}>
+            ) : (
+              <form onSubmit={handleSignUp} className="space-y-4 animate-fade-in">
+                <div>
+                  <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Nome</label>
+                  <Input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    placeholder="Seu nome completo"
+                    className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
+                  />
+                </div>
+                <div>
+                  <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">E-mail</label>
+                  <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="seu@email.com"
+                    className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
+                  />
+                </div>
+                <div>
+                  <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Senha</label>
+                  <Input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    className="h-11 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full h-11 rounded-xl text-sm font-semibold mt-2"
+                  style={{
+                    background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))',
+                    boxShadow: '0 8px 32px -8px hsl(var(--accent) / 0.5)',
+                  }}
+                >
                   Solicitar Acesso
                 </Button>
               </form>
-              <button onClick={() => setIsSignUp(false)} className="w-full text-center mt-6 text-sm text-[hsl(var(--accent))] font-medium">
-                Já tem conta? Entrar
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
