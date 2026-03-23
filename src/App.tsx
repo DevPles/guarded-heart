@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth, AppRole } from "@/contexts/AuthContext";
 
 import Login from "./pages/Login";
+import Login2 from "./pages/Login2";
 import Home from "./pages/Home";
 import LandingPage from "./pages/LandingPage";
 import AppLayout from "./components/AppLayout";
@@ -84,6 +85,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<LandingOrHome />} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/login2" element={<PublicRoute><Login2 /></PublicRoute>} />
             <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
               <Route path="/home" element={<Home />} />
               <Route path="/meu-painel" element={<RoleGuard allowed={['colaborador']}><ColaboradorPortal /></RoleGuard>} />
