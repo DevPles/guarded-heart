@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import logoErgon from '@/assets/logo-ergon.png';
+import loginCharacter from '@/assets/login-character.png';
 
 const Login2 = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const { signIn } = useAuth();
   const { toast } = useToast();
 
@@ -24,192 +25,250 @@ const Login2 = () => {
     setSubmitting(false);
   };
 
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: 'Acesso por convite',
+      description: 'O cadastro é feito pelo administrador do sistema. Solicite um convite ao seu gestor.',
+    });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[hsl(220,25%,8%)]">
-      {/* Animated background blobs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-[hsl(var(--primary)/0.15)] blur-[120px] animate-pulse" />
-        <div className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-[hsl(var(--accent)/0.12)] blur-[120px] animate-pulse" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[hsl(var(--primary)/0.08)] blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-[hsl(220,25%,8%)] relative overflow-hidden">
+      {/* Background animated blobs */}
+      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-[hsl(var(--primary)/0.08)] blur-[150px] animate-pulse" />
+      <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-[hsl(var(--accent)/0.06)] blur-[150px] animate-pulse" style={{ animationDelay: '1.5s' }} />
 
-      {/* Glass grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary)/0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)/0.3) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* Card with perspective flip */}
-      <div className="relative z-10 w-full max-w-md mx-4" style={{ perspective: '1200px' }}>
+      {/* Main card */}
+      <div className="relative z-10 w-full max-w-[900px] mx-4 h-[540px] rounded-3xl overflow-hidden shadow-2xl flex">
+        
+        {/* LEFT: Blue creative panel */}
         <div
-          className="relative w-full transition-transform duration-700 ease-in-out"
+          className={`relative w-1/2 flex flex-col items-center justify-center transition-all duration-700 ease-in-out overflow-hidden ${
+            isSignUp ? 'translate-x-full' : 'translate-x-0'
+          }`}
           style={{
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(210 80% 55%), hsl(var(--accent)))',
+            zIndex: 20,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
           }}
         >
-          {/* ===== FRONT: LOGIN ===== */}
-          <div
-            className="w-full rounded-3xl p-8 sm:p-10"
-            style={{
-              backfaceVisibility: 'hidden',
-              background: 'linear-gradient(135deg, hsl(220 20% 14% / 0.8), hsl(220 20% 10% / 0.6))',
-              backdropFilter: 'blur(40px)',
-              border: '1px solid hsl(var(--primary) / 0.15)',
-              boxShadow: '0 0 80px -20px hsl(var(--primary) / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.05)',
-            }}
-          >
-            <div className="text-center mb-8">
-              <img src={logoErgon} alt="Ergon" className="h-14 mx-auto mb-6 brightness-0 invert opacity-90" />
-              <h1
-                className="text-3xl font-bold text-white mb-2"
-                style={{ fontFamily: 'Space Grotesk' }}
-              >
-                Bem-vindo
-              </h1>
-              <p className="text-white/50 text-sm">
-                Acesse o ecossistema de saúde ocupacional
-              </p>
-            </div>
+          {/* Decorative shapes */}
+          <div className="absolute top-10 left-10 w-20 h-20 rounded-full border-2 border-white/10 animate-pulse" />
+          <div className="absolute bottom-20 right-8 w-32 h-32 rounded-full border border-white/5" />
+          <div className="absolute top-1/3 right-4 w-12 h-12 rounded-lg bg-white/5 rotate-45" />
+
+          <div className="relative z-10 text-center px-8">
+            <img src={logoErgon} alt="Ergon" className="h-12 mx-auto mb-6 brightness-0 invert" />
+            
+            {!isSignUp ? (
+              <div className="animate-fade-in">
+                <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
+                  Saúde Ocupacional<br />com Evidências
+                </h2>
+                <p className="text-white/70 text-sm mb-6 max-w-[260px] mx-auto">
+                  O ecossistema completo para gestão de ergonomia e saúde do trabalho.
+                </p>
+                {/* 3D Character */}
+                <img
+                  src={loginCharacter}
+                  alt=""
+                  className="w-40 h-40 mx-auto mb-6 object-contain drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
+                />
+                <Button
+                  variant="outline"
+                  className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white h-11 px-8 text-sm backdrop-blur-sm"
+                  onClick={() => setIsSignUp(true)}
+                >
+                  Criar Conta
+                </Button>
+              </div>
+            ) : (
+              <div className="animate-fade-in">
+                <h2 className="text-2xl font-bold text-white mb-3 leading-tight" style={{ fontFamily: 'Space Grotesk' }}>
+                  Já tem acesso?
+                </h2>
+                <p className="text-white/70 text-sm mb-6 max-w-[260px] mx-auto">
+                  Entre com suas credenciais e retome o controle da sua gestão.
+                </p>
+                <img
+                  src={loginCharacter}
+                  alt=""
+                  className="w-40 h-40 mx-auto mb-6 object-contain drop-shadow-2xl"
+                  style={{ filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.3))' }}
+                />
+                <Button
+                  variant="outline"
+                  className="rounded-full border-white/30 text-white bg-white/10 hover:bg-white/20 hover:text-white h-11 px-8 text-sm backdrop-blur-sm"
+                  onClick={() => setIsSignUp(false)}
+                >
+                  Entrar
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* RIGHT: Sign In Form */}
+        <div
+          className={`absolute top-0 left-0 w-1/2 h-full flex flex-col items-center justify-center p-10 transition-all duration-700 ease-in-out ${
+            isSignUp ? 'opacity-0 pointer-events-none -translate-x-8' : 'opacity-100 translate-x-0'
+          }`}
+          style={{
+            marginLeft: '50%',
+            background: 'linear-gradient(180deg, hsl(220 20% 12%), hsl(220 20% 9%))',
+          }}
+        >
+          <div className="w-full max-w-sm">
+            <h2 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk' }}>
+              Entrar
+            </h2>
+            <p className="text-white/40 text-sm mb-8">Acesse sua conta</p>
 
             <form onSubmit={handleSignIn} className="space-y-5">
-              <div className="space-y-2">
-                <Label htmlFor="l2-email" className="text-white/70 text-xs uppercase tracking-wider">
-                  E-mail
-                </Label>
+              <div>
+                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">E-mail</label>
                 <Input
-                  id="l2-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="seu@email.com"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.3)] transition-all"
+                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.2)]"
                 />
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="l2-pass" className="text-white/70 text-xs uppercase tracking-wider">
-                  Senha
-                </Label>
+              <div>
+                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Senha</label>
                 <Input
-                  id="l2-pass"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.3)] transition-all"
+                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary)/0.2)]"
                 />
               </div>
-
               <Button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-12 rounded-xl text-base font-semibold relative overflow-hidden group"
+                className="w-full h-12 rounded-xl text-base font-semibold"
                 style={{
                   background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))',
-                  boxShadow: '0 4px 30px -5px hsl(var(--primary) / 0.5)',
+                  boxShadow: '0 8px 32px -8px hsl(var(--primary) / 0.5)',
                 }}
               >
-                <span className="relative z-10">{submitting ? 'Entrando...' : 'Entrar'}</span>
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                {submitting ? 'Entrando...' : 'Entrar'}
               </Button>
             </form>
-
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => setIsFlipped(true)}
-                className="text-sm text-white/40 hover:text-white/70 transition-colors"
-              >
-                Não tem conta? <span className="text-[hsl(var(--primary))] font-medium">Solicitar acesso</span>
-              </button>
-            </div>
-
-            {/* Decorative corner accents */}
-            <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-white/10 rounded-tl-3xl pointer-events-none" />
-            <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-white/10 rounded-br-3xl pointer-events-none" />
           </div>
+        </div>
 
-          {/* ===== BACK: SIGNUP REQUEST ===== */}
-          <div
-            className="absolute inset-0 w-full rounded-3xl p-8 sm:p-10"
-            style={{
-              backfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)',
-              background: 'linear-gradient(135deg, hsl(220 20% 14% / 0.8), hsl(220 20% 10% / 0.6))',
-              backdropFilter: 'blur(40px)',
-              border: '1px solid hsl(var(--accent) / 0.15)',
-              boxShadow: '0 0 80px -20px hsl(var(--accent) / 0.2), inset 0 1px 0 hsl(0 0% 100% / 0.05)',
-            }}
-          >
-            <div className="text-center mb-8">
-              <img src={logoErgon} alt="Ergon" className="h-14 mx-auto mb-6 brightness-0 invert opacity-90" />
-              <h1
-                className="text-3xl font-bold text-white mb-2"
-                style={{ fontFamily: 'Space Grotesk' }}
-              >
-                Solicitar Acesso
-              </h1>
-              <p className="text-white/50 text-sm">
-                O cadastro é feito pelo administrador
-              </p>
-            </div>
+        {/* LEFT SIDE: Sign Up Form */}
+        <div
+          className={`absolute top-0 right-0 w-1/2 h-full flex flex-col items-center justify-center p-10 transition-all duration-700 ease-in-out ${
+            isSignUp ? 'opacity-100 translate-x-0' : 'opacity-0 pointer-events-none translate-x-8'
+          }`}
+          style={{
+            marginRight: '50%',
+            left: 0,
+            background: 'linear-gradient(180deg, hsl(220 20% 12%), hsl(220 20% 9%))',
+          }}
+        >
+          <div className="w-full max-w-sm">
+            <h2 className="text-3xl font-bold text-white mb-1" style={{ fontFamily: 'Space Grotesk' }}>
+              Criar Conta
+            </h2>
+            <p className="text-white/40 text-sm mb-8">Solicite acesso ao sistema</p>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                toast({
-                  title: 'Acesso por convite',
-                  description: 'Solicite um convite ao seu gestor.',
-                });
-              }}
-              className="space-y-5"
-            >
-              <div className="space-y-2">
-                <Label className="text-white/70 text-xs uppercase tracking-wider">Nome</Label>
+            <form onSubmit={handleSignUp} className="space-y-5">
+              <div>
+                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Nome</label>
                 <Input
                   type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   required
                   placeholder="Seu nome completo"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.3)] transition-all"
+                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
                 />
               </div>
-              <div className="space-y-2">
-                <Label className="text-white/70 text-xs uppercase tracking-wider">E-mail</Label>
+              <div>
+                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">E-mail</label>
                 <Input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="seu@email.com"
-                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.3)] transition-all"
+                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
                 />
               </div>
-
+              <div>
+                <label className="text-white/50 text-xs uppercase tracking-widest mb-2 block">Senha</label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                  className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25 focus:border-[hsl(var(--accent))] focus:ring-[hsl(var(--accent)/0.2)]"
+                />
+              </div>
               <Button
                 type="submit"
-                className="w-full h-12 rounded-xl text-base font-semibold relative overflow-hidden group"
+                className="w-full h-12 rounded-xl text-base font-semibold"
                 style={{
                   background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))',
-                  boxShadow: '0 4px 30px -5px hsl(var(--accent) / 0.5)',
+                  boxShadow: '0 8px 32px -8px hsl(var(--accent) / 0.5)',
                 }}
               >
-                <span className="relative z-10">Solicitar Acesso</span>
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                Solicitar Acesso
               </Button>
             </form>
+          </div>
+        </div>
 
-            <div className="mt-6 text-center">
-              <button
-                onClick={() => setIsFlipped(false)}
-                className="text-sm text-white/40 hover:text-white/70 transition-colors"
-              >
-                Já tem conta? <span className="text-[hsl(var(--accent))] font-medium">Entrar</span>
+        {/* Mobile fallback */}
+        <div className="md:hidden absolute inset-0 flex flex-col items-center justify-center p-6 z-30"
+          style={{ background: 'linear-gradient(180deg, hsl(220 20% 12%), hsl(220 20% 9%))' }}
+        >
+          <img src={logoErgon} alt="Ergon" className="h-10 mx-auto mb-6 brightness-0 invert" />
+          {!isSignUp ? (
+            <div className="w-full max-w-sm animate-fade-in">
+              <h2 className="text-2xl font-bold text-white mb-1 text-center" style={{ fontFamily: 'Space Grotesk' }}>Entrar</h2>
+              <p className="text-white/40 text-sm mb-6 text-center">Acesse sua conta</p>
+              <form onSubmit={handleSignIn} className="space-y-4">
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="E-mail" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Senha" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
+                <Button type="submit" className="w-full h-12" disabled={submitting} style={{ background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)))' }}>
+                  {submitting ? 'Entrando...' : 'Entrar'}
+                </Button>
+              </form>
+              <button onClick={() => setIsSignUp(true)} className="w-full text-center mt-6 text-sm text-[hsl(var(--primary))] font-medium">
+                Não tem conta? Cadastrar
               </button>
             </div>
-          </div>
+          ) : (
+            <div className="w-full max-w-sm animate-fade-in">
+              <h2 className="text-2xl font-bold text-white mb-1 text-center" style={{ fontFamily: 'Space Grotesk' }}>Criar Conta</h2>
+              <p className="text-white/40 text-sm mb-6 text-center">Solicite acesso</p>
+              <form onSubmit={handleSignUp} className="space-y-4">
+                <Input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Nome" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="E-mail" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="Senha" className="h-12 rounded-xl border-white/10 bg-white/5 text-white placeholder:text-white/25" />
+                <Button type="submit" className="w-full h-12" style={{ background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))' }}>
+                  Solicitar Acesso
+                </Button>
+              </form>
+              <button onClick={() => setIsSignUp(false)} className="w-full text-center mt-6 text-sm text-[hsl(var(--accent))] font-medium">
+                Já tem conta? Entrar
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
