@@ -34,7 +34,11 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[hsl(210,20%,95%)] to-[hsl(215,30%,90%)] px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[hsl(220,25%,8%)]">
+      {/* Animated background blobs */}
+      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-[hsl(var(--primary)/0.08)] blur-[150px] animate-pulse" />
+      <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-[hsl(var(--accent)/0.06)] blur-[150px] animate-pulse" style={{ animationDelay: '1.5s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[hsl(var(--primary)/0.05)] blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
       <div className="w-full max-w-4xl h-[540px] rounded-3xl overflow-hidden shadow-2xl relative bg-card">
         
         {/* ===== SIGN IN FORM (left side) ===== */}
