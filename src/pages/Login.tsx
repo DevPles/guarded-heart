@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import logoErgon from '@/assets/logo-ergon.png';
+import CursorTrail from '@/components/CursorTrail';
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
