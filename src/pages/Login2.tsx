@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import logoErgon from '@/assets/logo-ergon.png';
 import loginCharacter from '@/assets/login-character.png';
+import heroBg from '@/assets/landing-hero-1.jpg';
 
 const Login2 = () => {
   const [email, setEmail] = useState('');
