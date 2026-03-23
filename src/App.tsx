@@ -85,6 +85,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<LandingOrHome />} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+            <Route path="/login2" element={<PublicRoute><Login2 /></PublicRoute>} />
             <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
               <Route path="/home" element={<Home />} />
               <Route path="/meu-painel" element={<RoleGuard allowed={['colaborador']}><ColaboradorPortal /></RoleGuard>} />
