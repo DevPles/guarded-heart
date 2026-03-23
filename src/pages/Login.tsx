@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import logoErgon from '@/assets/logo-ergon.png';
-import CursorTrail from '@/components/CursorTrail';
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -36,7 +35,6 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[hsl(220,25%,8%)]">
-      <CursorTrail />
       {/* Animated background blobs */}
       <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-[hsl(var(--primary)/0.08)] blur-[150px] animate-pulse" />
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-[hsl(var(--accent)/0.06)] blur-[150px] animate-pulse" style={{ animationDelay: '1.5s' }} />
