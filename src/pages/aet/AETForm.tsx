@@ -198,7 +198,7 @@ const AETForm = () => {
   useEffect(() => {
     if (!isEdit) return;
     const load = async () => {
-      const { data } = await supabase.from('assessments').select('*').eq('id', id).single();
+      const { data } = await supabase.from('assessments').select('*').eq('id', id).maybeSingle();
       if (data) {
         setTitle(data.title || '');
         setEmpresaId(data.empresa_id);
