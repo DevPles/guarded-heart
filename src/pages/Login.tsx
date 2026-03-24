@@ -35,10 +35,43 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden bg-[hsl(220,25%,8%)]">
-      {/* Animated background blobs */}
-      <div className="absolute top-[-200px] left-[-200px] w-[600px] h-[600px] rounded-full bg-[hsl(var(--primary)/0.08)] blur-[150px] animate-pulse" />
-      <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] rounded-full bg-[hsl(var(--accent)/0.06)] blur-[150px] animate-pulse" style={{ animationDelay: '1.5s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-[hsl(var(--primary)/0.05)] blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+      {/* Liquid animated background */}
+      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <defs>
+          <filter id="liquid">
+            <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="2">
+              <animate attributeName="baseFrequency" values="0.012;0.018;0.012" dur="12s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" scale="120" />
+          </filter>
+          <radialGradient id="g1" cx="30%" cy="40%" r="50%">
+            <stop offset="0%" stopColor="hsl(215,60%,40%)" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="hsl(220,25%,8%)" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="g2" cx="70%" cy="60%" r="45%">
+            <stop offset="0%" stopColor="hsl(200,70%,50%)" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="hsl(220,25%,8%)" stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id="g3" cx="50%" cy="30%" r="40%">
+            <stop offset="0%" stopColor="hsl(240,50%,45%)" stopOpacity="0.18" />
+            <stop offset="100%" stopColor="hsl(220,25%,8%)" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <g filter="url(#liquid)">
+          <rect width="100%" height="100%" fill="url(#g1)">
+            <animate attributeName="x" values="0;40;0" dur="15s" repeatCount="indefinite" />
+            <animate attributeName="y" values="0;-30;0" dur="18s" repeatCount="indefinite" />
+          </rect>
+          <rect width="100%" height="100%" fill="url(#g2)">
+            <animate attributeName="x" values="0;-50;0" dur="20s" repeatCount="indefinite" />
+            <animate attributeName="y" values="0;40;0" dur="14s" repeatCount="indefinite" />
+          </rect>
+          <rect width="100%" height="100%" fill="url(#g3)">
+            <animate attributeName="x" values="0;30;0" dur="17s" repeatCount="indefinite" />
+            <animate attributeName="y" values="0;-50;0" dur="22s" repeatCount="indefinite" />
+          </rect>
+        </g>
+      </svg>
       <div className="relative z-10 w-full max-w-4xl h-[540px] rounded-3xl overflow-hidden shadow-2xl bg-card">
         
         {/* ===== SIGN IN FORM (left side) ===== */}
