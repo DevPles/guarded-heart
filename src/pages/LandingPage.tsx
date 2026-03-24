@@ -1066,7 +1066,7 @@ const LandingPage = () => {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setQuoteOpen(true)}
-              className="px-5 py-2.5 rounded-full text-sm font-semibold border-2 border-teal-500 text-teal-600 hover:bg-teal-50 transition-all duration-300"
+              className="px-5 py-2.5 rounded-full text-sm font-semibold bg-gradient-to-r from-teal-500 to-blue-600 text-white hover:from-teal-400 hover:to-blue-500 transition-all duration-300 shadow-lg shadow-teal-500/20"
             >
               Simular orçamento
             </button>
